@@ -1,0 +1,173 @@
+export const mockCampaigns = [
+  {
+    id: 1,
+    name: 'SaaS Founders Outreach Q1',
+    status: 'active',
+    createdAt: '2026-02-15',
+    leads: 45,
+    sent: 128,
+    opened: 67,
+    replied: 18,
+    bounced: 3,
+    openRate: 52.3,
+    replyRate: 14.1,
+    bounceRate: 2.3,
+    sequence: [
+      { step: 1, type: 'email', subject: 'Quick question about {{company}}', delay: 0, sent: 45, opened: 28, replied: 8, variant: 'A' },
+      { step: 2, type: 'email', subject: 'Re: {{company}} growth strategy', delay: 3, sent: 37, opened: 19, replied: 5, variant: 'A' },
+      { step: 3, type: 'email', subject: 'Last follow-up — {{firstName}}', delay: 5, sent: 32, opened: 14, replied: 3, variant: 'A' },
+      { step: 4, type: 'email', subject: 'Thought you might find this useful', delay: 7, sent: 14, opened: 6, replied: 2, variant: 'A' },
+    ],
+    abTest: {
+      enabled: true,
+      variants: {
+        A: { subject: 'Quick question about {{company}}', openRate: 52.3, replyRate: 14.1 },
+        B: { subject: '{{firstName}}, saw your recent LinkedIn post', openRate: 58.7, replyRate: 16.4 },
+      }
+    },
+    tags: ['saas', 'founders', 'q1-2026'],
+  },
+  {
+    id: 2,
+    name: 'Agency Leaders UK Campaign',
+    status: 'active',
+    createdAt: '2026-03-01',
+    leads: 32,
+    sent: 64,
+    opened: 38,
+    replied: 9,
+    bounced: 1,
+    openRate: 59.4,
+    replyRate: 14.1,
+    bounceRate: 1.6,
+    sequence: [
+      { step: 1, type: 'email', subject: 'Helping agencies like {{company}} scale outbound', delay: 0, sent: 32, opened: 21, replied: 5, variant: 'A' },
+      { step: 2, type: 'email', subject: 'Re: scaling outbound for {{company}}', delay: 2, sent: 27, opened: 14, replied: 3, variant: 'A' },
+      { step: 3, type: 'email', subject: '{{firstName}}, quick follow-up', delay: 5, sent: 5, opened: 3, replied: 1, variant: 'A' },
+    ],
+    abTest: { enabled: false, variants: {} },
+    tags: ['agency', 'uk', 'q1-2026'],
+  },
+  {
+    id: 3,
+    name: 'Growth Hackers APAC',
+    status: 'paused',
+    createdAt: '2026-02-20',
+    leads: 28,
+    sent: 56,
+    opened: 25,
+    replied: 4,
+    bounced: 5,
+    openRate: 44.6,
+    replyRate: 7.1,
+    bounceRate: 8.9,
+    sequence: [
+      { step: 1, type: 'email', subject: '{{firstName}}, loved what {{company}} is building', delay: 0, sent: 28, opened: 14, replied: 2, variant: 'A' },
+      { step: 2, type: 'email', subject: 'Following up on my last email', delay: 3, sent: 23, opened: 9, replied: 1, variant: 'A' },
+      { step: 3, type: 'email', subject: 'One more thing, {{firstName}}', delay: 6, sent: 5, opened: 2, replied: 1, variant: 'A' },
+    ],
+    abTest: { enabled: false, variants: {} },
+    tags: ['growth', 'apac'],
+  },
+  {
+    id: 4,
+    name: 'Enterprise SaaS CEOs',
+    status: 'draft',
+    createdAt: '2026-03-10',
+    leads: 50,
+    sent: 0,
+    opened: 0,
+    replied: 0,
+    bounced: 0,
+    openRate: 0,
+    replyRate: 0,
+    bounceRate: 0,
+    sequence: [
+      { step: 1, type: 'email', subject: '{{firstName}}, a question about {{company}}\'s outbound', delay: 0, sent: 0, opened: 0, replied: 0, variant: 'A' },
+      { step: 2, type: 'email', subject: 'Re: outbound at {{company}}', delay: 2, sent: 0, opened: 0, replied: 0, variant: 'A' },
+      { step: 3, type: 'email', subject: 'Final thought, {{firstName}}', delay: 5, sent: 0, opened: 0, replied: 0, variant: 'A' },
+    ],
+    abTest: {
+      enabled: true,
+      variants: {
+        A: { subject: '{{firstName}}, a question about {{company}}\'s outbound', openRate: 0, replyRate: 0 },
+        B: { subject: 'Noticed {{company}} is hiring — let\'s chat', openRate: 0, replyRate: 0 },
+      }
+    },
+    tags: ['enterprise', 'ceo'],
+  },
+  {
+    id: 5,
+    name: 'Completed: B2B Founders US',
+    status: 'completed',
+    createdAt: '2026-01-10',
+    leads: 60,
+    sent: 180,
+    opened: 104,
+    replied: 31,
+    bounced: 7,
+    openRate: 57.8,
+    replyRate: 17.2,
+    bounceRate: 3.9,
+    sequence: [
+      { step: 1, type: 'email', subject: '{{firstName}}, quick intro from Zoka Works', delay: 0, sent: 60, opened: 38, replied: 14, variant: 'A' },
+      { step: 2, type: 'email', subject: 'Re: intro from Zoka Works', delay: 2, sent: 46, opened: 30, replied: 9, variant: 'A' },
+      { step: 3, type: 'email', subject: 'Last email — promise!', delay: 5, sent: 37, opened: 22, replied: 5, variant: 'A' },
+      { step: 4, type: 'email', subject: 'Break-up email — {{firstName}}', delay: 8, sent: 37, opened: 14, replied: 3, variant: 'A' },
+    ],
+    abTest: { enabled: false, variants: {} },
+    tags: ['founders', 'us', 'completed'],
+  },
+];
+
+export const campaignTemplates = [
+  {
+    id: 't1',
+    name: 'Standard 3-Step Sequence',
+    steps: [
+      { step: 1, delay: 0, subject: 'Quick question about {{company}}', body: 'Hi {{firstName}},\n\nI came across {{company}} and was impressed by what you\'re building in the {{industry}} space.\n\nWe help companies like yours generate 30-50 qualified meetings per month through targeted cold outreach — without the overhead of building an in-house SDR team.\n\nWould you be open to a quick 15-minute call this week?\n\nBest,\n{{senderName}}' },
+      { step: 2, delay: 3, subject: 'Re: Quick question about {{company}}', body: 'Hi {{firstName}},\n\nJust circling back on my last email. I know things get busy, so I\'ll keep this brief.\n\nWe recently helped a similar {{industry}} company book 42 meetings in their first month. Happy to share how.\n\nWorth a chat?\n\n{{senderName}}' },
+      { step: 3, delay: 5, subject: '{{firstName}}, one last thing', body: 'Hi {{firstName}},\n\nI don\'t want to be a pest, so this will be my last note.\n\nIf scaling outbound ever becomes a priority for {{company}}, I\'d love to be your first call.\n\nEither way, wishing you all the best.\n\n{{senderName}}' },
+    ]
+  },
+  {
+    id: 't2',
+    name: 'Aggressive 5-Step Sequence',
+    steps: [
+      { step: 1, delay: 0, subject: '{{firstName}}, saw {{company}} is growing fast', body: 'Hi {{firstName}},\n\nCongrats on the growth at {{company}} — it\'s clear you\'re onto something big.\n\nI\'m reaching out because we specialize in helping fast-growing {{industry}} companies fill their pipeline with qualified leads.\n\nWould love to show you how we do it. Free to chat this week?\n\n{{senderName}}' },
+      { step: 2, delay: 2, subject: 'Re: {{company}} pipeline', body: 'Hi {{firstName}},\n\nFollowing up — I know CEOs/Founders get hundreds of emails, so I\'ll be direct.\n\nWe guarantee 20+ qualified meetings in 30 days or you don\'t pay. No contracts, no BS.\n\nInterested?\n\n{{senderName}}' },
+      { step: 3, delay: 4, subject: 'Case study for {{industry}} companies', body: 'Hi {{firstName}},\n\nThought you might find this relevant — we recently helped a {{industry}} startup go from 0 to 40 meetings/month in 60 days.\n\nHappy to walk you through their strategy (takes 10 min).\n\n{{senderName}}' },
+      { step: 4, delay: 6, subject: '{{firstName}}, honest question', body: 'Hey {{firstName}},\n\nQuick honest question — is outbound lead gen something {{company}} is actively working on, or is it not a priority right now?\n\nEither way is totally fine — just want to respect your time.\n\n{{senderName}}' },
+      { step: 5, delay: 9, subject: 'Breaking up 💔', body: 'Hi {{firstName}},\n\nLast email from me — I promise!\n\nIf you ever want to explore scaling outbound for {{company}}, my door is always open.\n\nWishing you and the team continued success.\n\nCheers,\n{{senderName}}' },
+    ]
+  },
+];
+
+export const analyticsTimeSeries = [
+  { date: 'Feb 1', sent: 12, opened: 6, replied: 2, bounced: 1 },
+  { date: 'Feb 5', sent: 18, opened: 10, replied: 3, bounced: 0 },
+  { date: 'Feb 10', sent: 25, opened: 15, replied: 4, bounced: 1 },
+  { date: 'Feb 15', sent: 22, opened: 14, replied: 5, bounced: 0 },
+  { date: 'Feb 20', sent: 30, opened: 18, replied: 6, bounced: 2 },
+  { date: 'Feb 25', sent: 28, opened: 16, replied: 5, bounced: 1 },
+  { date: 'Mar 1', sent: 35, opened: 22, replied: 8, bounced: 1 },
+  { date: 'Mar 5', sent: 32, opened: 20, replied: 7, bounced: 0 },
+  { date: 'Mar 10', sent: 40, opened: 26, replied: 9, bounced: 2 },
+  { date: 'Mar 15', sent: 38, opened: 24, replied: 8, bounced: 1 },
+  { date: 'Mar 19', sent: 42, opened: 28, replied: 10, bounced: 1 },
+];
+
+export const sendTimeHeatmap = [
+  { hour: '6 AM', mon: 2, tue: 3, wed: 1, thu: 4, fri: 2 },
+  { hour: '7 AM', mon: 5, tue: 6, wed: 4, thu: 7, fri: 5 },
+  { hour: '8 AM', mon: 12, tue: 15, wed: 11, thu: 14, fri: 10 },
+  { hour: '9 AM', mon: 18, tue: 22, wed: 16, thu: 20, fri: 14 },
+  { hour: '10 AM', mon: 15, tue: 18, wed: 14, thu: 16, fri: 12 },
+  { hour: '11 AM', mon: 10, tue: 12, wed: 9, thu: 11, fri: 8 },
+  { hour: '12 PM', mon: 6, tue: 8, wed: 5, thu: 7, fri: 4 },
+  { hour: '1 PM', mon: 8, tue: 10, wed: 7, thu: 9, fri: 6 },
+  { hour: '2 PM', mon: 14, tue: 16, wed: 12, thu: 15, fri: 10 },
+  { hour: '3 PM', mon: 12, tue: 14, wed: 10, thu: 13, fri: 9 },
+  { hour: '4 PM', mon: 8, tue: 10, wed: 7, thu: 9, fri: 6 },
+  { hour: '5 PM', mon: 4, tue: 5, wed: 3, thu: 5, fri: 3 },
+];
