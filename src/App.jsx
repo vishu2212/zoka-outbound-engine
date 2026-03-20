@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
+import HomePage from './pages/HomePage';
 import Dashboard from './pages/Dashboard';
 import Leads from './pages/Leads';
 import Campaigns from './pages/Campaigns';
@@ -13,8 +14,9 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<HomePage />} />
         <Route element={<Layout />}>
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/leads" element={<Leads />} />
           <Route path="/campaigns" element={<Campaigns />} />
           <Route path="/ai-engine" element={<AIEngine />} />

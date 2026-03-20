@@ -8,7 +8,7 @@ const navSections = [
   {
     title: 'Overview',
     items: [
-      { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
+      { path: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
     ]
   },
   {
@@ -61,7 +61,7 @@ export default function Sidebar() {
                 className={({ isActive }) =>
                   `nav-item${isActive ? ' active' : ''}`
                 }
-                end={item.path === '/'}
+                end={item.path === '/dashboard'}
               >
                 <item.icon className="nav-icon" size={20} />
                 <span>{item.label}</span>

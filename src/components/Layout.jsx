@@ -3,7 +3,7 @@ import Sidebar from './Sidebar';
 import { Search, Bell } from 'lucide-react';
 
 const pageTitles = {
-  '/': 'Dashboard',
+  '/dashboard': 'Dashboard',
   '/leads': 'Leads',
   '/campaigns': 'Campaigns',
   '/ai-engine': 'AI Engine',
