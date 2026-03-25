@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard, Users, Rocket, Sparkles, Mail, BarChart3,
   TrendingUp, Settings, Zap, ChevronRight
@@ -36,8 +36,6 @@ const navSections = [
 ];
 
 export default function Sidebar() {
-  const location = useLocation();
-
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
