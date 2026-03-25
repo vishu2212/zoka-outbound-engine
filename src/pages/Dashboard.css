@@ -1,0 +1,437 @@
+/* Dashboard.css */
+
+.dashboard-layout {
+  padding-bottom: 4rem;
+  color: #E2E8F0;
+}
+
+/* 6. Demo Mode Badge */
+.demo-banner {
+  background-color: rgba(234, 179, 8, 0.1);
+  border-bottom: 1px solid rgba(234, 179, 8, 0.2);
+  color: #FBBF24;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: -2rem -2rem 2rem -2rem; /* Pull out of padding if inside Layout */
+}
+
+/* Container */
+.dashboard-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* 1. System Status Bar */
+.system-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #111827; /* Darker clean bg */
+  border: 1px solid #1E293B;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 2rem;
+  font-family: 'Inter', monospace;
+  font-size: 0.875rem;
+}
+
+.status-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #94A3B8;
+}
+
+.status-left strong {
+  color: #F8FAFC;
+  font-weight: 500;
+}
+
+.status-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-indicator.active { background-color: #3B82F6; box-shadow: 0 0 8px rgba(59, 130, 246, 0.8); }
+.status-indicator.completed { background-color: #10B981; }
+.status-indicator.idle { background-color: #64748B; }
+
+.status-divider { color: #334155; }
+
+.status-right {
+  color: #94A3B8;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Base Card System */
+.system-card {
+  background: #151D2E;
+  border: 1px solid #1E293B;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid #1E293B;
+  padding-bottom: 0.75rem;
+}
+
+.card-top h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #F1F5F9;
+  margin: 0;
+}
+
+.card-top h3 svg {
+  color: #3B82F6;
+}
+
+/* Grid Layout */
+.grid-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+  .grid-layout { grid-template-columns: 1fr; }
+}
+
+/* 2. Workflow Metrics Panel */
+.workflow-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.w-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1rem;
+  background: #111827;
+  border-radius: 0.5rem;
+  border: 1px solid #1E293B;
+}
+
+.w-metric span {
+  font-size: 0.75rem;
+  color: #64748B;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.w-metric strong {
+  font-size: 1.125rem;
+  color: #F1F5F9;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 768px) {
+  .workflow-metrics { grid-template-columns: 1fr 1fr; }
+}
+
+/* 3. Realistic Demo Table */
+.table-responsive {
+  overflow-x: auto;
+}
+
+.demo-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.875rem;
+}
+
+.demo-table th {
+  color: #64748B;
+  font-weight: 500;
+  padding: 0.75rem;
+  border-bottom: 1px solid #1E293B;
+}
+
+.demo-table td {
+  padding: 1rem 0.75rem;
+  border-bottom: 1px solid #1E293B;
+  color: #94A3B8;
+}
+
+.demo-table tr:last-child td { border-bottom: none; padding-bottom: 0; }
+.demo-table td.font-semibold { font-weight: 500; }
+.demo-table td.text-light { color: #F8FAFC; }
+.demo-table td.text-dim { color: #F87171; font-style: italic; }
+.demo-table td.text-success { color: #A7F3D0; }
+
+.status-pill {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.status-pill.sent { background: rgba(59, 130, 246, 0.1); color: #60A5FA; border: 1px solid rgba(59, 130, 246, 0.2); }
+.status-pill.replied { background: rgba(16, 185, 129, 0.1); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.2); }
+.status-pill.pending { background: rgba(100, 116, 139, 0.1); color: #94A3B8; border: 1px solid rgba(100, 116, 139, 0.3); }
+
+
+/* 5. Message Previews */
+.message-previews {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.msg-box {
+  background: #111827;
+  border: 1px solid #1E293B;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.msg-header {
+  font-size: 0.75rem;
+  color: #64748B;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.msg-box p {
+  color: #CBD5E1;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin: 0;
+  font-style: italic;
+}
+
+
+/* 7. Small Metrics Panel (Telemetry) */
+.telemetry-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.telemetry-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed #1E293B;
+  color: #94A3B8;
+}
+
+.telemetry-list li:last-child { border-bottom: none; }
+.telemetry-list strong { color: #F8FAFC; font-variant-numeric: tabular-nums; }
+
+
+/* 4. Activity Log Terminal */
+.terminal-card {
+  padding: 0;
+  overflow: hidden;
+  background: #0B0F19;
+}
+
+.terminal-header {
+  margin: 0;
+  padding: 1rem 1.5rem;
+  background: #151D2E;
+  border-bottom: 1px solid #1E293B;
+}
+
+.terminal-body {
+  padding: 1.5rem;
+  height: 250px;
+  overflow-y: auto;
+  font-family: 'Fira Code', 'SF Mono', monospace;
+  font-size: 0.75rem;
+  color: #A7F3D0;
+  line-height: 1.6;
+}
+
+.log-line {
+  margin-bottom: 0.25rem;
+  opacity: 0.9;
+}
+
+.blinking-cursor {
+  animation: blink 1s step-end infinite;
+  display: inline-block;
+  margin-top: 0.25rem;
+}
+
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+
+/* 8. Payload Execution */
+.payload-box {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #111827;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #1E293B;
+}
+
+.pl-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pl-label {
+  font-size: 0.625rem;
+  color: #64748B;
+  font-weight: 700;
+}
+
+.pl-section code {
+  color: #60A5FA;
+  font-size: 0.75rem;
+  background: rgba(59, 130, 246, 0.1);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-family: monospace;
+}
+
+.pl-arrow { color: #475569; }
+
+/* Bottom Sections (9, 10, 11) */
+.divider {
+  height: 1px;
+  background: #1E293B;
+  margin: 3rem 0;
+}
+
+.grid-2-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .grid-2-col { grid-template-columns: 1fr; }
+}
+
+.arch-card h3, .limits-card h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.125rem;
+  margin: 0 0 1.5rem 0;
+  color: #F8FAFC;
+}
+
+.arch-card h3 svg { color: #8B5CF6; }
+.limits-card h3 svg { color: #EF4444; }
+
+.arch-layers {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.arch-layer strong {
+  display: block;
+  color: #E2E8F0;
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+}
+
+.arch-layer p {
+  color: #94A3B8;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.limits-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.limits-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  color: #CBD5E1;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.limits-list svg { color: #FCA5A5; flex-shrink: 0; margin-top: 0.125rem;}
+
+.cta-panel {
+  background: linear-gradient(145deg, #1E293B 0%, #0F172A 100%);
+  text-align: center;
+  padding: 3.5rem 2rem;
+}
+
+.cta-content {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.cta-content h2 {
+  font-size: 1.5rem;
+  color: #F8FAFC;
+  margin-bottom: 1rem;
+}
+
+.cta-content p {
+  color: #94A3B8;
+  font-size: 0.875rem;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.cta-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.btn-engineered {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.btn-engineered.primary {
+  background: #3B82F6;
+  color: white;
+  border: 1px solid transparent;
+}
+.btn-engineered.primary:hover { background: #2563EB; }
+
+.btn-engineered.secondary {
+  background: transparent;
+  color: #F8FAFC;
+  border: 1px solid #334155;
+}
+.btn-engineered.secondary:hover {
+  background: #1E293B;
+  border-color: #475569;
+}

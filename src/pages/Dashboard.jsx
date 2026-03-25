@@ -1,164 +1,278 @@
-import { useApp } from '../context/AppContext';
-import { Users, Rocket, Mail, MousePointerClick, MessageSquare, AlertTriangle, TrendingUp, TrendingDown, ArrowRight } from 'lucide-react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { analyticsTimeSeries } from '../data/mockCampaigns';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { 
+  Terminal, 
+  Activity, 
+  CheckCircle2, 
+  AlertCircle, 
+  Clock, 
+  Database, 
+  Cpu, 
+  Send,
+  Layers,
+  ArrowRight,
+  ShieldAlert,
+  Code
+} from 'lucide-react';
+import './Dashboard.css';
 
 export default function Dashboard() {
-  const { state } = useApp();
-  const { leads, campaigns, activity } = state;
+  const [systemStatus, setSystemStatus] = useState('Idle');
+  const [logs, setLogs] = useState([]);
+  const [metrics, setMetrics] = useState({ leads: 0, enriched: 0, generated: 0, replies: 0 });
+  
+  // Real-time Simulation Effect
+  useEffect(() => {
+    let step = 0;
+    const sequence = [
+      { time: 1000, log: 'System initialized. Authenticating API gateways...', status: 'Active' },
+      { time: 2500, log: 'Target ICP: B2B SaaS Founders (US). Querying sources...', leads: 0 },
+      { time: 4000, log: 'Extraction started. Parsing LinkedIn & Apollo databases.', leads: 14 },
+      { time: 5500, log: 'Pagination continued. Aggregating results.', leads: 42 },
+      { time: 7000, log: 'Extraction complete (42 leads). Beginning enrichment phase.', enriched: 0 },
+      { time: 8500, log: 'SMTP pinging active. Verifying domains.', enriched: 12 },
+      { time: 10000, log: 'Enrichment complete: 28 valid emails found, 14 bounced or catch-all.', enriched: 28 },
+      { time: 11500, log: 'Spawning LLM prompt instances for personalization.', generated: 0 },
+      { time: 13000, log: 'Generating hyper-personalized opening lines based on recent funding.', generated: 15 },
+      { time: 14500, log: 'Message generation complete (28 constraints met).', generated: 28 },
+      { time: 16000, log: 'Dispatching to mailing queues. Throttle set to 40/hr.', status: 'Completed', replies: 5 }
+    ];
 
-  const activeCampaigns = campaigns.filter(c => c.status === 'active').length;
-  const totalSent = campaigns.reduce((a, c) => a + c.sent, 0);
-  const totalOpened = campaigns.reduce((a, c) => a + c.opened, 0);
-  const totalReplied = campaigns.reduce((a, c) => a + c.replied, 0);
-  const totalBounced = campaigns.reduce((a, c) => a + c.bounced, 0);
-  const avgOpenRate = totalSent ? ((totalOpened / totalSent) * 100).toFixed(1) : 0;
-  const avgReplyRate = totalSent ? ((totalReplied / totalSent) * 100).toFixed(1) : 0;
-  const avgBounceRate = totalSent ? ((totalBounced / totalSent) * 100).toFixed(1) : 0;
+    const timeouts = sequence.map(s => {
+      return setTimeout(() => {
+        const now = new Date();
+        const timeStr = `[${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}]`;
+        
+        setLogs(prev => [...prev, `${timeStr} ${s.log}`]);
+        
+        if (s.status) setSystemStatus(s.status);
+        setMetrics(prev => ({
+          leads: s.leads !== undefined ? s.leads : prev.leads,
+          enriched: s.enriched !== undefined ? s.enriched : prev.enriched,
+          generated: s.generated !== undefined ? s.generated : prev.generated,
+          replies: s.replies !== undefined ? s.replies : prev.replies,
+        }));
+      }, s.time);
+    });
 
-  const metrics = [
-    { label: 'Total Leads', value: leads.length, icon: Users, color: 'blue', trend: '+12%', trendDir: 'up' },
-    { label: 'Active Campaigns', value: activeCampaigns, icon: Rocket, color: 'purple', trend: '+2', trendDir: 'up' },
-    { label: 'Emails Sent', value: totalSent.toLocaleString(), icon: Mail, color: 'cyan', trend: '+18%', trendDir: 'up' },
-    { label: 'Open Rate', value: `${avgOpenRate}%`, icon: MousePointerClick, color: 'emerald', trend: '+3.2%', trendDir: 'up' },
-    { label: 'Reply Rate', value: `${avgReplyRate}%`, icon: MessageSquare, color: 'amber', trend: '+1.4%', trendDir: 'up' },
-    { label: 'Bounce Rate', value: `${avgBounceRate}%`, icon: AlertTriangle, color: 'rose', trend: '-0.8%', trendDir: 'down' },
+    return () => timeouts.forEach(clearTimeout);
+  }, []);
+
+  const realisticData = [
+    { name: 'Michael Chen', company: 'NexusTech', email: 'm.chen@nexustech.io', status: 'Sent' },
+    { name: 'Sarah Miller', company: 'CloudWorks', email: 'sarah@cloudworks.co', status: 'Replied' },
+    { name: 'David Hoffman', company: 'Finix Data', email: 'No Email Found (Catch-all)', status: 'Pending' },
+    { name: 'Elena Rostova', company: 'LogisTech', email: 'erostova@logistech.com', status: 'Sent' },
   ];
 
   return (
-    <div className="animate-slide-up">
-      <div className="page-header">
-        <div className="page-header-left">
-          <h1>Dashboard</h1>
-          <p>Welcome back! Here's your outreach performance overview.</p>
-        </div>
-        <div className="page-header-right">
-          <Link to="/campaigns" className="btn btn-primary">
-            <Rocket size={16} /> New Campaign
-          </Link>
-        </div>
+    <div className="dashboard-layout animate-fade-in">
+      
+      {/* 6. DEMO MODE BADGE */}
+      <div className="demo-banner">
+        <AlertCircle size={16} />
+        <span><strong>Demo Mode</strong> — Simulated workflow for demonstration purposes</span>
       </div>
 
-      <div className="metrics-grid">
-        {metrics.map((m) => (
-          <div className="metric-card" key={m.label}>
-            <div className={`metric-icon ${m.color}`}>
-              <m.icon size={22} />
-            </div>
-            <div className="metric-content">
-              <div className="metric-value">{m.value}</div>
-              <div className="metric-label">{m.label}</div>
-              <span className={`metric-trend ${m.trendDir}`}>
-                {m.trendDir === 'up' ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
-                {m.trend}
-              </span>
-            </div>
+      <div className="dashboard-container">
+        {/* 1. SYSTEM STATUS BAR */}
+        <div className="system-status-bar">
+          <div className="status-left">
+            <span className={`status-indicator pulsing ${systemStatus.toLowerCase()}`}></span>
+            <strong>System {systemStatus}</strong>
+            <span className="status-divider">|</span>
+            <Clock size={14} /> Last Run: Just now
           </div>
-        ))}
-      </div>
-
-      <div className="grid-2" style={{ alignItems: 'start' }}>
-        <div className="card">
-          <div className="card-header">
-            <div>
-              <div className="card-title">Performance Overview</div>
-              <div className="card-subtitle">Email metrics over time</div>
-            </div>
-          </div>
-          <div style={{ width: '100%', height: 300 }}>
-            <ResponsiveContainer>
-              <AreaChart data={analyticsTimeSeries}>
-                <defs>
-                  <linearGradient id="gradSent" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
-                  </linearGradient>
-                  <linearGradient id="gradOpened" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
-                  </linearGradient>
-                  <linearGradient id="gradReplied" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis />
-                <Tooltip />
-                <Area type="monotone" dataKey="sent" stroke="#3b82f6" fill="url(#gradSent)" strokeWidth={2} />
-                <Area type="monotone" dataKey="opened" stroke="#10b981" fill="url(#gradOpened)" strokeWidth={2} />
-                <Area type="monotone" dataKey="replied" stroke="#8b5cf6" fill="url(#gradReplied)" strokeWidth={2} />
-              </AreaChart>
-            </ResponsiveContainer>
+          <div className="status-right">
+            Total Processed Today: {metrics.leads} leads
           </div>
         </div>
 
-        <div className="card">
-          <div className="card-header">
-            <div>
-              <div className="card-title">Recent Activity</div>
-              <div className="card-subtitle">Latest email events</div>
-            </div>
-            <Link to="/analytics" className="btn btn-ghost btn-sm">
-              View All <ArrowRight size={14} />
-            </Link>
-          </div>
-          <div className="activity-list">
-            {activity.slice(0, 8).map((item) => (
-              <div className="activity-item" key={item.id}>
-                <span className={`activity-dot ${item.type}`}></span>
-                <span className="activity-text" dangerouslySetInnerHTML={{ __html: item.message }}></span>
-                <span className="activity-time">{item.time}</span>
+        <div className="grid-layout">
+          {/* Main Left Column */}
+          <div className="col-main">
+            
+            {/* 2. CURRENT WORKFLOW PANEL */}
+            <div className="system-card">
+              <div className="card-top">
+                <h3><Activity size={18} /> Current Workflow Execution</h3>
+                <span className={`badge badge-${systemStatus === 'Completed' ? 'emerald' : 'blue'}`}>
+                  {systemStatus === 'Completed' ? 'Finished' : 'Running'}
+                </span>
               </div>
-            ))}
-          </div>
-        </div>
-      </div>
+              <div className="workflow-metrics">
+                <div className="w-metric">
+                  <span>Target ICP</span>
+                  <strong>B2B SaaS Founders, US</strong>
+                </div>
+                <div className="w-metric">
+                  <span>Leads Extracted</span>
+                  <strong>{metrics.leads}</strong>
+                </div>
+                <div className="w-metric">
+                  <span>Emails Enriched</span>
+                  <strong>{metrics.enriched}</strong>
+                </div>
+                <div className="w-metric">
+                  <span>Messages Generated</span>
+                  <strong>{metrics.generated}</strong>
+                </div>
+              </div>
+            </div>
 
-      <div className="card mt-6">
-        <div className="card-header">
-          <div>
-            <div className="card-title">Active Campaigns</div>
-            <div className="card-subtitle">Currently running outreach campaigns</div>
+            {/* 3. REALISTIC DATA TABLE */}
+            <div className="system-card">
+              <div className="card-top">
+                <h3><Database size={18} /> Enriched Output Sample</h3>
+              </div>
+              <div className="table-responsive">
+                <table className="demo-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Company</th>
+                      <th>Email Status</th>
+                      <th>Pipeline</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {realisticData.map((row, i) => (
+                      <tr key={i}>
+                        <td className="font-semibold text-light">{row.name}</td>
+                        <td>{row.company}</td>
+                        <td className={row.email.includes('No Email') ? 'text-dim' : 'text-success'}>
+                          {row.email}
+                        </td>
+                        <td>
+                          <span className={`status-pill ${row.status.toLowerCase()}`}>
+                            {row.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* 5. MESSAGE GENERATION PREVIEW */}
+            <div className="system-card">
+              <div className="card-top">
+                <h3><Cpu size={18} /> AI Message Generation Snippets</h3>
+              </div>
+              <div className="message-previews">
+                <div className="msg-box">
+                  <div className="msg-header">Variant A (To: Michael Chen)</div>
+                  <p>"Notice NexusTech just rolled out the v2 API portal. Have you solved the infrastructure lag we discussed in similar setups? Our system auto-scales..."</p>
+                </div>
+                <div className="msg-box">
+                  <div className="msg-header">Variant B (To: Sarah Miller)</div>
+                  <p>"Saw CloudWorks' recent seed round update. Usually scale brings email deliverability issues. We engineer infrastructure that prevents..."</p>
+                </div>
+              </div>
+            </div>
+
           </div>
-          <Link to="/campaigns" className="btn btn-ghost btn-sm">
-            View All <ArrowRight size={14} />
-          </Link>
+
+          {/* Right Sidebar Column */}
+          <div className="col-side">
+            
+            {/* 7. SMALL METRICS PANEL */}
+            <div className="system-card metrics-card">
+              <h3><Activity size={18} /> Live Telemetry</h3>
+              <ul className="telemetry-list">
+                <li>Processed: <strong>{metrics.leads}</strong></li>
+                <li>Valid Emails: <strong>{metrics.enriched}</strong></li>
+                <li>Sent: <strong>{metrics.generated}</strong></li>
+                <li>Replies (Sim): <strong>{metrics.replies}</strong></li>
+              </ul>
+            </div>
+
+            {/* 4. ACTIVITY LOG */}
+            <div className="system-card terminal-card">
+              <div className="card-top terminal-header">
+                <h3><Terminal size={18} /> System Activity Log</h3>
+              </div>
+              <div className="terminal-body">
+                {logs.map((log, i) => (
+                  <div key={i} className="log-line">{log}</div>
+                ))}
+                {systemStatus !== 'Completed' && (
+                  <div className="log-line blinking-cursor">_</div>
+                )}
+              </div>
+            </div>
+
+            {/* 8. SAMPLE WORKFLOW INPUT -> OUTPUT */}
+            <div className="system-card">
+              <div className="card-top">
+                <h3><Code size={18} /> Payload Execution</h3>
+              </div>
+              <div className="payload-box">
+                <div className="pl-section">
+                  <span className="pl-label">INPUT</span>
+                  <code>{`{ role: "CTO", loc: "US" }`}</code>
+                </div>
+                <ArrowRight size={14} className="pl-arrow" />
+                <div className="pl-section">
+                  <span className="pl-label">OUTPUT</span>
+                  <code>{`{ valid: ${metrics.enriched}, sent: ${metrics.generated} }`}</code>
+                </div>
+              </div>
+            </div>
+
+          </div>
         </div>
-        <div className="data-table-wrapper" style={{ border: 'none' }}>
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Campaign</th>
-                <th>Status</th>
-                <th>Leads</th>
-                <th>Sent</th>
-                <th>Open Rate</th>
-                <th>Reply Rate</th>
-                <th>Bounce Rate</th>
-              </tr>
-            </thead>
-            <tbody>
-              {campaigns.filter(c => c.status === 'active' || c.status === 'completed').slice(0, 5).map((c) => (
-                <tr key={c.id}>
-                  <td className="cell-primary">{c.name}</td>
-                  <td>
-                    <span className={`badge ${c.status === 'active' ? 'badge-emerald' : c.status === 'completed' ? 'badge-blue' : 'badge-neutral'}`}>
-                      {c.status}
-                    </span>
-                  </td>
-                  <td>{c.leads}</td>
-                  <td>{c.sent}</td>
-                  <td>{c.openRate}%</td>
-                  <td>{c.replyRate}%</td>
-                  <td>{c.bounceRate}%</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+
+        {/* BOTTOM SECTIONS (9, 10, 11, 12) */}
+        
+        <div className="divider" />
+
+        {/* 9. SYSTEM ARCHITECTURE & 10. LIMITATIONS */}
+        <div className="grid-2-col pt-4">
+          <div className="system-card arch-card">
+            <h3><Layers size={18} /> System Architecture</h3>
+            <div className="arch-layers">
+              <div className="arch-layer">
+                <strong>Data Source Layer</strong>
+                <p>APIs / scraping nodes pulling raw signal.</p>
+              </div>
+              <div className="arch-layer">
+                <strong>Processing Layer</strong>
+                <p>Waterfall enrichment & SMTP verification.</p>
+              </div>
+              <div className="arch-layer">
+                <strong>AI Personalization Layer</strong>
+                <p>LLM agents parsing context for copy drafting.</p>
+              </div>
+              <div className="arch-layer">
+                <strong>Outreach Automation Layer</strong>
+                <p>Throttled distribution across managed sender domains.</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="system-card limits-card">
+            <h3><ShieldAlert size={18} /> System Constraints</h3>
+            <ul className="limits-list">
+              <li><AlertCircle size={14}/> <strong>Prototype stage (v1):</strong> Built as an engineering demonstration.</li>
+              <li><AlertCircle size={14}/> <strong>Validation limits:</strong> Not yet battle-tested at large scale (100k+ emails).</li>
+              <li><AlertCircle size={14}/> <strong>Customization required:</strong> Requires client-specific infrastructure and domain setups. This is an engineered service, not plug-and-play SaaS.</li>
+            </ul>
+          </div>
         </div>
+
+        {/* 11. SERVICE POSITIONING & 12. CTA */}
+        <div className="system-card cta-panel">
+          <div className="cta-content">
+            <h2>Custom Infrastructure Engineering</h2>
+            <p>I build bespoke outbound systems, robust lead pipelines, and AI-powered outreach workflows tailored to your specific data sources.</p>
+            <div className="cta-actions">
+              <a href="mailto:vishu2212@example.com" className="btn-engineered primary">Contact Engineering</a>
+              <a href="#" className="btn-engineered secondary">Book Architecture Call</a>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   );
