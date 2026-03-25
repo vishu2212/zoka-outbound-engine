@@ -1,0 +1,478 @@
+/* LandingPage.css */
+
+.landing-layout {
+  min-height: 100vh;
+  background-color: #0F172A; /* Deep dark blue, crisp SaaS aesthetic */
+  color: #F8FAFC;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Typography & Basics */
+h1, h2, h3, h4 {
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+p {
+  color: #94A3B8;
+  line-height: 1.6;
+}
+
+/* Common Section Styles */
+.landing-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.section {
+  padding: 6rem 0;
+  border-bottom: 1px solid #1E293B;
+}
+
+.section:last-child {
+  border-bottom: none;
+}
+
+.section-header {
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  color: #F1F5F9;
+  margin-bottom: 1rem;
+}
+
+.section-description {
+  font-size: 1.125rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* 2. Transparency Banner */
+.transparency-banner {
+  background-color: rgba(234, 179, 8, 0.1);
+  border-bottom: 1px solid rgba(234, 179, 8, 0.2);
+  color: #FBBF24;
+  padding: 0.75rem 1rem;
+  text-align: center;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* 1. Hero Section */
+.hero-section {
+  padding: 8rem 0 6rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.prototype-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(16, 185, 129, 0.1);
+  color: #10B981;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #10B981;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.hero-title {
+  font-size: 4rem;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(180deg, #FFFFFF 0%, #94A3B8 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  max-width: 800px;
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  max-width: 600px;
+  margin-bottom: 3rem;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.btn-primary, .btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background-color: #3B82F6;
+  color: white;
+  border: none;
+  box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.39);
+}
+
+.btn-primary:hover {
+  background-color: #2563EB;
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.23);
+  transform: translateY(-1px);
+}
+
+.btn-primary.large {
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: #F8FAFC;
+  border: 1px solid #334155;
+}
+
+.btn-secondary:hover {
+  background-color: #1E293B;
+  border-color: #475569;
+}
+
+/* 3. Workflow Steps */
+.workflow-steps {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  position: relative;
+}
+
+.step-card {
+  flex: 1;
+  min-width: 180px;
+  background: #1E293B;
+  border: 1px solid #334155;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.step-icon {
+  color: #3B82F6;
+  margin-bottom: 1rem;
+}
+
+.step-title {
+  font-size: 1.125rem;
+  margin-bottom: 0.5rem;
+  color: #F8FAFC;
+}
+
+.step-desc {
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.step-arrow {
+  position: absolute;
+  top: 50%;
+  right: -1.25rem;
+  color: #475569;
+  transform: translateY(-50%);
+}
+
+@media (max-width: 1024px) {
+  .step-arrow { display: none; }
+  .workflow-steps { flex-direction: column; }
+}
+
+/* 4. Simulation Section */
+.simulation-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.simulation-card {
+  background: #0B0F19; /* Darker than background */
+  border: 1px solid #1E293B;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.card-header {
+  background: #1E293B;
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #CBD5E1;
+  border-bottom: 1px solid #334155;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+.terminal-text p {
+  font-family: 'Fira Code', monospace; /* Will fallback nicely */
+  font-size: 0.875rem;
+  color: #A7F3D0;
+  margin-bottom: 0.5rem;
+}
+
+.terminal-text .keyword {
+  color: #F87171;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #1E293B;
+}
+
+.stat-row:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.stat-row span {
+  color: #94A3B8;
+}
+
+.stat-row strong {
+  color: #F8FAFC;
+}
+
+@media (max-width: 768px) {
+  .simulation-grid { grid-template-columns: 1fr; }
+}
+
+/* 5. Data Table */
+.data-table-wrapper {
+  overflow-x: auto;
+  background: #1E293B;
+  border: 1px solid #334155;
+  border-radius: 0.5rem;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.data-table th, .data-table td {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #334155;
+}
+
+.data-table th {
+  background: #0F172A;
+  color: #94A3B8;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table td {
+  font-size: 0.875rem;
+  color: #CBD5E1;
+}
+
+/* 6. Architecture Overview */
+.arch-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.arch-node {
+  background: #1E293B;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  border: 1px solid #334155;
+}
+
+.arch-node svg {
+  color: #8B5CF6;
+  margin-bottom: 1rem;
+}
+
+.arch-node h4 {
+  margin-bottom: 0.5rem;
+  color: #E2E8F0;
+}
+
+.arch-node p {
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .arch-grid { grid-template-columns: 1fr; }
+}
+
+/* 7 & 8. Split Section */
+.split-section {
+  display: flex;
+  gap: 4rem;
+}
+
+.split-col {
+  flex: 1;
+}
+
+.split-section .section-title {
+  font-size: 1.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.custom-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.custom-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  color: #CBD5E1;
+}
+
+.custom-list svg {
+  color: #10B981;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.limit-box {
+  background: rgba(239, 68, 68, 0.05);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.limit-icon {
+  color: #EF4444;
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.limit-box p {
+  color: #F8FAFC;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.limit-box ul {
+  margin: 0;
+  padding-left: 1.25rem;
+  color: #FCA5A5;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .split-section { flex-direction: column; gap: 3rem; }
+}
+
+/* 9 & 10. CTA Section */
+.cta-section {
+  text-align: center;
+}
+
+.cta-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.service-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.service-tags .tag {
+  background: #1E293B;
+  border: 1px solid #334155;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  color: #94A3B8;
+}
+
+.cta-box {
+  background: linear-gradient(145deg, #1E293B 0%, #0F172A 100%);
+  border: 1px solid #334155;
+  padding: 3rem;
+  border-radius: 1rem;
+  margin-top: 3rem;
+}
+
+.cta-box h3 {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+  color: #F8FAFC;
+}
+
+.cta-box p {
+  margin-bottom: 2rem;
+}
+
+/* Footer */
+.landing-footer {
+  text-align: center;
+  padding: 2rem 0;
+  border-top: 1px solid #1E293B;
+  color: #475569;
+  font-size: 0.875rem;
+}
