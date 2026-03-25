@@ -16,6 +16,14 @@ export default function Dashboard() {
   const unassignedLeadIds = state.leads.filter((lead) => !lead.campaignId).map((lead) => lead.id);
   const recentLogs = state.logs.slice(0, 12);
   const busy = state.system.isGeneratingLeads || state.system.isGeneratingMessages || state.system.isSendingEmails;
+  const currentFlowStep = useMemo(() => {
+    if (state.system.isGeneratingLeads) return 0;
+    if (state.system.currentCampaign && state.campaigns.some((campaign) => campaign.id === state.system.currentCampaign && campaign.leadIds.length > 0)) return 1;
+    if (state.system.isGeneratingMessages || state.messages.length > 0) return 2;
+    if (state.analytics.replies > 0) return 4;
+    if (state.system.isSendingEmails || state.analytics.sent > 0) return 3;
+    return 0;
+  }, [state]);
 
   const handleCreateCampaign = () => {
     const id = actions.createCampaign(campaignName.trim() || undefined);
@@ -89,6 +97,34 @@ export default function Dashboard() {
             <div className="metric-value">{state.analytics.replies}</div>
             <div className="metric-label">Replies</div>
           </div>
+        </div>
+      </div>
+
+      <div className="card mt-6">
+        <div className="card-header">
+          <div>
+            <div className="card-title">Pipeline Flow</div>
+            <div className="card-subtitle">Leads to Campaign to AI to Email to Analytics</div>
+          </div>
+        </div>
+        <div className="grid-5" style={{ display: 'grid', gridTemplateColumns: 'repeat(5, minmax(0, 1fr))', gap: 'var(--space-3)' }}>
+          {['Leads', 'Campaign', 'AI', 'Email', 'Analytics'].map((step, index) => (
+            <div
+              key={step}
+              className="card"
+              style={{
+                background: index === currentFlowStep ? 'var(--accent-blue-soft)' : 'var(--bg-tertiary)',
+                borderColor: index === currentFlowStep ? 'var(--accent-blue)' : 'var(--border-primary)',
+                textAlign: 'center',
+                padding: 'var(--space-4)',
+              }}
+            >
+              <strong>{step}</strong>
+              <div style={{ marginTop: 'var(--space-2)', fontSize: 'var(--font-xs)', color: 'var(--text-secondary)' }}>
+                {index === currentFlowStep ? 'Current Step' : 'Waiting'}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 

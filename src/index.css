@@ -1488,3 +1488,79 @@ input, select, textarea {
   transform: translateX(20px);
   background: white;
 }
+
+/* Mobile Navigation + Mobile Data Cards */
+.mobile-menu-btn {
+  display: none;
+}
+
+.sidebar-backdrop {
+  display: none;
+}
+
+.mobile-cards {
+  display: none;
+}
+
+.mobile-data-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  display: grid;
+  gap: var(--space-2);
+}
+
+.mobile-data-card-row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
+}
+
+.mobile-data-card-row strong {
+  color: var(--text-primary);
+}
+
+@media (max-width: 768px) {
+  .mobile-menu-btn {
+    display: inline-flex;
+  }
+
+  .sidebar.mobile-open {
+    transform: translateX(0);
+    z-index: 130;
+  }
+
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 120;
+  }
+
+  .topbar-right .badge,
+  .topbar-right .search-bar {
+    display: none;
+  }
+
+  .page-header-right {
+    width: 100%;
+  }
+
+  .page-header-right .btn,
+  .page-header-right .form-select {
+    width: 100%;
+  }
+
+  .desktop-table {
+    display: none;
+  }
+
+  .mobile-cards {
+    display: grid;
+    gap: var(--space-3);
+  }
+}

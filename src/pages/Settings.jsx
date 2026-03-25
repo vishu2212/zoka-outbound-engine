@@ -75,6 +75,37 @@ export default function Settings() {
 
         <div className="settings-row mt-4">
           <div className="form-group">
+            <label className="form-label">Email Provider</label>
+            <select className="form-select" value={settings.emailProvider} onChange={(event) => setSettings((prev) => ({ ...prev, emailProvider: event.target.value }))}>
+              <option value="Mock SMTP">Mock SMTP</option>
+              <option value="Gmail API">Gmail API</option>
+              <option value="Outlook API">Outlook API</option>
+            </select>
+          </div>
+          <div className="form-group">
+            <label className="form-label">Rate Limit (emails/min)</label>
+            <input
+              className="form-input"
+              type="number"
+              value={settings.rateLimitPerMinute}
+              onChange={(event) => setSettings((prev) => ({ ...prev, rateLimitPerMinute: Number(event.target.value) || 0 }))}
+            />
+          </div>
+        </div>
+
+        <div className="settings-row mt-4">
+          <div className="form-group">
+            <label className="form-label">SMTP Host</label>
+            <input className="form-input" value={settings.smtpHost} onChange={(event) => setSettings((prev) => ({ ...prev, smtpHost: event.target.value }))} />
+          </div>
+          <div className="form-group">
+            <label className="form-label">SMTP Port</label>
+            <input className="form-input" type="number" value={settings.smtpPort} onChange={(event) => setSettings((prev) => ({ ...prev, smtpPort: Number(event.target.value) || 0 }))} />
+          </div>
+        </div>
+
+        <div className="settings-row mt-4">
+          <div className="form-group">
             <label className="form-label">Apollo API Key</label>
             <input className="form-input" value={settings.apolloApiKey} onChange={(event) => setSettings((prev) => ({ ...prev, apolloApiKey: event.target.value }))} />
           </div>

@@ -152,7 +152,7 @@ export default function EmailEngine() {
         </div>
       </div>
 
-      <div className="data-table-wrapper mt-6">
+      <div className="desktop-table data-table-wrapper mt-6">
         <table className="data-table">
           <thead>
             <tr>
@@ -189,6 +189,34 @@ export default function EmailEngine() {
             )}
           </tbody>
         </table>
+      </div>
+
+      <div className="mobile-cards mt-6">
+        {campaignEmails.map((email) => {
+          const lead = state.leads.find((item) => item.id === email.leadId);
+          return (
+            <div key={`mobile-email-${email.id}`} className="mobile-data-card">
+              <div className="mobile-data-card-row">
+                <strong>{lead ? lead.name : `Lead #${email.leadId}`}</strong>
+                <span className={`badge ${badgeForStatus(email.status, email.deliveryStatus)}`}>
+                  {email.deliveryStatus || email.status}
+                </span>
+              </div>
+              <div className="mobile-data-card-row">
+                <span>Step</span>
+                <span>{email.sequenceLabel}</span>
+              </div>
+              <div className="mobile-data-card-row">
+                <span>Attempts</span>
+                <span>{email.attempts || 0}</span>
+              </div>
+              <div className="mobile-data-card-row">
+                <span>Updated</span>
+                <span>{email.updatedAt ? new Date(email.updatedAt).toLocaleTimeString() : '-'}</span>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

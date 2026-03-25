@@ -121,7 +121,7 @@ export default function Leads() {
         </div>
       </div>
 
-      <div className="data-table-wrapper mt-6">
+      <div className="desktop-table data-table-wrapper mt-6">
         <table className="data-table">
           <thead>
             <tr>
@@ -129,6 +129,7 @@ export default function Leads() {
               <th>Name</th>
               <th>Company</th>
               <th>Email</th>
+              <th>Score</th>
               <th>Status</th>
               <th>Stage</th>
               <th>Campaign</th>
@@ -145,6 +146,7 @@ export default function Leads() {
                   <td className="cell-primary">{lead.name}</td>
                   <td>{lead.company}</td>
                   <td>{lead.email || 'No Email'}</td>
+                  <td>{lead.score}</td>
                   <td>
                     <span className={`badge ${statusBadge(lead.status)}`}>{lead.status}</span>
                   </td>
@@ -155,6 +157,40 @@ export default function Leads() {
             })}
           </tbody>
         </table>
+      </div>
+
+      <div className="mobile-cards mt-6">
+        {filteredLeads.map((lead) => {
+          const campaign = state.campaigns.find((item) => item.id === lead.campaignId);
+          return (
+            <div key={`mobile-${lead.id}`} className="mobile-data-card">
+              <div className="mobile-data-card-row">
+                <strong>{lead.name}</strong>
+                <span className={`badge ${statusBadge(lead.status)}`}>{lead.status}</span>
+              </div>
+              <div className="mobile-data-card-row">
+                <span>Company</span>
+                <span>{lead.company}</span>
+              </div>
+              <div className="mobile-data-card-row">
+                <span>Email</span>
+                <span>{lead.email || 'No Email'}</span>
+              </div>
+              <div className="mobile-data-card-row">
+                <span>Score</span>
+                <span>{lead.score}</span>
+              </div>
+              <div className="mobile-data-card-row">
+                <span>Campaign</span>
+                <span>{campaign ? campaign.name : 'Unassigned'}</span>
+              </div>
+              <label className="mobile-data-card-row">
+                <span>Select</span>
+                <input type="checkbox" checked={selectedIds.includes(lead.id)} onChange={() => toggleLead(lead.id)} />
+              </label>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout';
+import HomePage from './pages/HomePage';
 import Dashboard from './pages/Dashboard';
 import Leads from './pages/Leads';
 import Campaigns from './pages/Campaigns';
@@ -13,18 +14,18 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Navigate to="/dashboard" replace />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="leads" element={<Leads />} />
-          <Route path="campaigns" element={<Campaigns />} />
-          <Route path="ai-engine" element={<AIEngine />} />
-          <Route path="email-engine" element={<EmailEngine />} />
-          <Route path="analytics" element={<Analytics />} />
-          <Route path="optimization" element={<Optimization />} />
-          <Route path="settings" element={<Settings />} />
+        <Route path="/" element={<HomePage />} />
+        <Route element={<Layout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/leads" element={<Leads />} />
+          <Route path="/campaigns" element={<Campaigns />} />
+          <Route path="/ai-engine" element={<AIEngine />} />
+          <Route path="/email-engine" element={<EmailEngine />} />
+          <Route path="/analytics" element={<Analytics />} />
+          <Route path="/optimization" element={<Optimization />} />
+          <Route path="/settings" element={<Settings />} />
         </Route>
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );

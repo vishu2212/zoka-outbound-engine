@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
-import { Search, Bell, Activity, Clock, Radio } from 'lucide-react';
+import { Search, Bell, Activity, Clock, Radio, Menu, X } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
 const pageTitles = {
@@ -17,15 +18,20 @@ const pageTitles = {
 export default function Layout() {
   const { state } = useApp();
   const location = useLocation();
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const title = pageTitles[location.pathname] || 'Dashboard';
   const activeCampaign = state.campaigns.find((campaign) => campaign.id === state.system.currentCampaign);
   const lastRunLabel = state.system.lastRun ? new Date(state.system.lastRun).toLocaleString() : 'Never';
 
   return (
     <div className="app-layout">
-      <Sidebar />
+      <Sidebar isOpen={mobileNavOpen} onClose={() => setMobileNavOpen(false)} />
+      {mobileNavOpen && <div className="sidebar-backdrop" onClick={() => setMobileNavOpen(false)}></div>}
       <div className="topbar">
         <div className="topbar-left">
+          <button className="topbar-icon-btn mobile-menu-btn" onClick={() => setMobileNavOpen((prev) => !prev)}>
+            {mobileNavOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
           <h2 className="page-title">{title}</h2>
         </div>
         <div className="topbar-right">

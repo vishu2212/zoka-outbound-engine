@@ -1,10 +1,16 @@
 import { NavLink } from 'react-router-dom';
 import {
-  LayoutDashboard, Users, Rocket, Sparkles, Mail, BarChart3,
+  House, LayoutDashboard, Users, Rocket, Sparkles, Mail, BarChart3,
   TrendingUp, Settings, Zap, ChevronRight
 } from 'lucide-react';
 
 const navSections = [
+  {
+    title: 'Entry',
+    items: [
+      { path: '/', icon: House, label: 'Home' },
+    ]
+  },
   {
     title: 'Overview',
     items: [
@@ -35,9 +41,9 @@ const navSections = [
   },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, onClose }) {
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar${isOpen ? ' mobile-open' : ''}`}>
       <div className="sidebar-header">
         <div className="sidebar-logo">
           <Zap size={20} />
@@ -56,10 +62,11 @@ export default function Sidebar() {
               <NavLink
                 key={item.path}
                 to={item.path}
+                onClick={onClose}
                 className={({ isActive }) =>
                   `nav-item${isActive ? ' active' : ''}`
                 }
-                end={item.path === '/dashboard'}
+                end={item.path === '/' || item.path === '/dashboard'}
               >
                 <item.icon className="nav-icon" size={20} />
                 <span>{item.label}</span>

@@ -3,7 +3,7 @@ import { useApp } from '../context/AppContext';
 import { Lightbulb, TrendingUp, Zap } from 'lucide-react';
 
 export default function Optimization() {
-  const { state } = useApp();
+  const { state, actions } = useApp();
 
   const averagePersonalization = useMemo(() => {
     if (!state.messages.length) return 0;
@@ -27,6 +27,7 @@ export default function Optimization() {
     if (state.analytics.openRate < 35) {
       list.push({
         id: 'subject',
+        applyKey: 'subject',
         title: 'Improve subject line relevance',
         detail: 'Open rate is below 35%. Increase curiosity and include company context in the first 4 words.',
         impact: '+8% to +15% open rate expected',
@@ -34,6 +35,7 @@ export default function Optimization() {
     } else {
       list.push({
         id: 'subject-strong',
+        applyKey: 'subject',
         title: 'Subject lines are healthy',
         detail: 'Current open rate is stable. Test one personalized subject variant per campaign to keep improving.',
         impact: '+3% incremental open lift possible',
@@ -43,6 +45,7 @@ export default function Optimization() {
     if (averagePersonalization < 75) {
       list.push({
         id: 'personalization',
+        applyKey: 'personalization',
         title: 'Increase personalization score',
         detail: `Current average score is ${averagePersonalization}%. Generate AI messages for more assigned leads before running campaigns.`,
         impact: '+5% to +10% reply rate expected',
@@ -50,6 +53,7 @@ export default function Optimization() {
     } else {
       list.push({
         id: 'personalization-strong',
+        applyKey: 'personalization',
         title: 'Personalization quality is strong',
         detail: `Average personalization score is ${averagePersonalization}%. Focus next on send-window optimization.`,
         impact: 'Higher consistency across sequence steps',
@@ -58,6 +62,7 @@ export default function Optimization() {
 
     list.push({
       id: 'timing',
+      applyKey: 'timing',
       title: 'Best send time window',
       detail: 'Prioritize sends between 9:00 AM and 11:00 AM local recipient time for Day 1 and Day 3 steps.',
       impact: '+4% to +7% open rate expected',
@@ -115,6 +120,11 @@ export default function Optimization() {
                 <span className="badge badge-emerald">{suggestion.impact}</span>
               </div>
               <p style={{ marginTop: 'var(--space-2)', color: 'var(--text-secondary)' }}>{suggestion.detail}</p>
+              <div style={{ marginTop: 'var(--space-3)' }}>
+                <button className="btn btn-sm btn-primary" onClick={() => actions.applySuggestion(suggestion.applyKey)}>
+                  Apply Suggestion
+                </button>
+              </div>
             </div>
           ))}
         </div>

@@ -72,6 +72,7 @@ function buildLead(id) {
     industry: randomPick(INDUSTRIES),
     status: hasEmail ? 'New' : 'No Email',
     stage: hasEmail ? 'generated' : 'missing-email',
+    score: randomInt(45, 98),
     campaignId: null,
     createdAt: nowIso(),
   };
@@ -88,6 +89,8 @@ function computeAnalytics(nextState) {
 
   return {
     totalLeads,
+    sent,
+    opened,
     emailsSent: sent,
     openRate,
     replies: replied,
@@ -146,6 +149,13 @@ function defaultState() {
       warmupDays: 21,
       trackOpens: true,
       trackReplies: true,
+      emailProvider: 'Mock SMTP',
+      smtpHost: 'smtp.demo.zoka.local',
+      smtpPort: 587,
+      rateLimitPerMinute: 25,
+      preferredSendWindow: '09:00-11:00',
+      subjectGuidanceEnabled: false,
+      minPersonalizationScore: 70,
       apolloApiKey: '',
       openaiApiKey: '',
     },
@@ -180,6 +190,11 @@ function buildMessageRecord(lead) {
     leadId: lead.id,
     variations: buildMessageVariations(lead).slice(0, randomInt(2, 3)),
     personalizationScore: scoreBase,
+    reasoning: [
+      `Matched role "${lead.title}" with outbound pain points in ${lead.industry}.`,
+      lead.email ? 'Lead has a valid email, so direct CTA language was prioritized.' : 'Lead is missing verified email, so softer language was generated for fallback channels.',
+      `Lead quality score ${lead.score}/100 influenced confidence and directness.`,
+    ],
     generatedAt: nowIso(),
   };
 }
@@ -441,6 +456,8 @@ export function AppProvider({ children }) {
               sequenceLabel: 'Day 1 Intro',
               status: 'failed',
               deliveryStatus: 'No Email',
+              openedAt: null,
+              replied: false,
               attempts: 0,
               updatedAt: nowIso(),
             },
@@ -474,6 +491,8 @@ export function AppProvider({ children }) {
               sequenceLabel: step.label,
               status: 'pending',
               deliveryStatus: 'Pending',
+              openedAt: null,
+              replied: false,
               attempts: 0,
               updatedAt: nowIso(),
             },
@@ -570,6 +589,8 @@ export function AppProvider({ children }) {
                     ...item,
                     status: replied ? 'replied' : 'opened',
                     deliveryStatus: replied ? 'Replied' : 'Opened',
+                    openedAt: nowIso(),
+                    replied,
                     updatedAt: nowIso(),
                   }
                 : item
@@ -703,6 +724,8 @@ export function AppProvider({ children }) {
                 ...item,
                 status: success ? 'sent' : 'failed',
                 deliveryStatus: success ? 'Sent' : 'Failed',
+                openedAt: success ? item.openedAt : null,
+                replied: success ? item.replied : false,
                 attempts: (item.attempts || 1) + 1,
                 updatedAt: nowIso(),
               }
@@ -737,6 +760,27 @@ export function AppProvider({ children }) {
     }));
   }
 
+  function applySuggestion(suggestionId) {
+    setState((prev) => {
+      const nextSettings = { ...prev.settings };
+      if (suggestionId === 'subject') {
+        nextSettings.subjectGuidanceEnabled = true;
+      }
+      if (suggestionId === 'personalization') {
+        nextSettings.minPersonalizationScore = 80;
+      }
+      if (suggestionId === 'timing') {
+        nextSettings.preferredSendWindow = '09:00-11:00';
+      }
+
+      return {
+        ...prev,
+        settings: nextSettings,
+        logs: pushLog(prev.logs, `Optimization applied: ${suggestionId}`),
+      };
+    });
+  }
+
   function resetSystem() {
     setState(defaultState());
   }
@@ -752,6 +796,7 @@ export function AppProvider({ children }) {
       sendEmails,
       pauseCampaign,
       retryFailedEmails,
+      applySuggestion,
       updateAnalytics,
       updateSettings,
       resetSystem,

@@ -103,6 +103,16 @@ export default function AIEngine() {
               <div className="badge badge-purple">
                 Personalization Score: {generatedRecord.personalizationScore}%
               </div>
+              <div className="card" style={{ background: 'var(--bg-tertiary)' }}>
+                <div className="card-title" style={{ marginBottom: 'var(--space-2)' }}>Why Generated</div>
+                <div style={{ display: 'grid', gap: 'var(--space-2)' }}>
+                  {generatedRecord.reasoning?.map((reason) => (
+                    <div key={reason} style={{ color: 'var(--text-secondary)', fontSize: 'var(--font-sm)' }}>
+                      • {reason}
+                    </div>
+                  ))}
+                </div>
+              </div>
               {generatedRecord.variations.map((variation, index) => (
                 <div key={`${generatedRecord.leadId}-${index}`} className="ai-output">
                   <div className="ai-output-label">Variation</div>

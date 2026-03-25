@@ -20,6 +20,16 @@ export default function Analytics() {
 
   const funnel = state.analytics.funnel;
   const maxFunnel = Math.max(funnel.leads, 1);
+  const averageReplyRate = useMemo(() => {
+    const activeCampaigns = state.campaigns.filter((campaign) => campaign.sentCount > 0);
+    if (!activeCampaigns.length) return 0;
+    const totalRate = activeCampaigns.reduce((sum, campaign) => sum + (campaign.sentCount ? (campaign.replyCount / campaign.sentCount) * 100 : 0), 0);
+    return Number((totalRate / activeCampaigns.length).toFixed(1));
+  }, [state.campaigns]);
+
+  const insightText = state.analytics.replyRate >= averageReplyRate
+    ? 'Campaign performing above average based on current reply conversion.'
+    : 'Campaign performance is below average; apply optimization suggestions to improve replies.';
 
   return (
     <div className="animate-slide-up">
@@ -127,6 +137,18 @@ export default function Analytics() {
               <Bar dataKey="replied" fill="#8b5cf6" />
             </BarChart>
           </ResponsiveContainer>
+        </div>
+      </div>
+
+      <div className="card mt-6">
+        <div className="card-header">
+          <div>
+            <div className="card-title">Insight</div>
+            <div className="card-subtitle">Automated interpretation from current analytics baseline.</div>
+          </div>
+        </div>
+        <div className={`badge ${state.analytics.replyRate >= averageReplyRate ? 'badge-emerald' : 'badge-amber'}`}>
+          {insightText}
         </div>
       </div>
     </div>
