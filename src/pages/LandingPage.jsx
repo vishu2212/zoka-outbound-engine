@@ -1,246 +1,276 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Terminal, 
-  Database, 
-  Cpu, 
-  Send, 
-  BarChart, 
-  AlertTriangle, 
-  CheckCircle2, 
-  ArrowRight,
-  Server,
-  Code,
-  Layers,
-  ShieldAlert
+import { motion } from 'framer-motion';
+import {
+  Zap, Search, PenTool, Send, BarChart3,
+  ArrowRight, CheckCircle2, Play, Users, MessageSquare,
+  Target, Clock, Sparkles, ChevronRight, Monitor
 } from 'lucide-react';
 import './LandingPage.css';
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
+  visible: (i = 0) => ({
+    opacity: 1, y: 0,
+    transition: { duration: 0.5, delay: i * 0.12, ease: [0.25, 0.1, 0.25, 1] }
+  })
+};
+
+const stagger = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.1, delayChildren: 0.2 } }
+};
+
+const scaleIn = {
+  hidden: { opacity: 0, scale: 0.96 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.7, ease: [0.25, 0.1, 0.25, 1] } }
+};
 
 export default function LandingPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="landing-layout">
-      {/* 2. TRANSPARENCY BANNER */}
-      <div className="transparency-banner">
-        <AlertTriangle size={16} className="banner-icon" />
-        <span><strong>Engineering Prototype:</strong> This is a working prototype built to demonstrate outbound automation workflows and system capabilities.</span>
-      </div>
+    <div className="lp">
 
-      <div className="landing-container">
-        {/* 1. HERO SECTION */}
-        <header className="hero-section">
-          <div className="prototype-badge">
-            <span className="live-dot"></span> Live Demo
-          </div>
-          <h1 className="hero-title">Automated Outbound Infrastructure</h1>
-          <p className="hero-subtitle">
-            An end-to-end system designed to identify leads, enrich data, and execute highly personalized outreach sequences at scale.
-          </p>
-          <div className="hero-actions">
-            <button className="btn-primary" onClick={() => navigate('/dashboard')}>
-              <Terminal size={18} />
-              View Demo Dashboard
+      {/* ═══ HERO ═══ */}
+      <section className="lp-hero">
+        <div className="lp-hero-bg" />
+        <div className="lp-container">
+          <motion.div className="lp-hero-badge" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+            <Zap size={14} /> AI-Powered Outbound System
+          </motion.div>
+
+          <motion.h1 className="lp-hero-title" variants={fadeUp} initial="hidden" animate="visible" custom={0}>
+            Your next 50 clients are<br />already in the pipeline.
+          </motion.h1>
+
+          <motion.p className="lp-hero-sub" variants={fadeUp} initial="hidden" animate="visible" custom={1}>
+            ZOKA is the AI outbound engine that sources prospects, writes personalized copy,
+            and executes multi-touch sequences — so you close deals instead of chasing them.
+          </motion.p>
+
+          <motion.div className="lp-hero-actions" variants={fadeUp} initial="hidden" animate="visible" custom={2}>
+            <button className="lp-btn lp-btn-primary" onClick={() => navigate('/dashboard')}>
+              <Play size={16} /> See It Running
             </button>
-            <a href="#contact" className="btn-secondary">
-              Discuss Architecture
+            <a href="#offer" className="lp-btn lp-btn-outline">
+              Book a Build <ChevronRight size={16} />
             </a>
-          </div>
-        </header>
+          </motion.div>
 
-        {/* 3. HOW THE SYSTEM WORKS */}
-        <section className="section flow-section">
-          <div className="section-header">
-            <h2 className="section-title">System Workflow</h2>
-            <p className="section-description">Autonomous pipeline from discovery to reply tracking.</p>
-          </div>
-          
-          <div className="workflow-steps">
+          <motion.div className="lp-hero-proof" variants={fadeUp} initial="hidden" animate="visible" custom={3}>
+            <div className="lp-proof-item"><strong>12,000+</strong> prospects sourced</div>
+            <span className="lp-proof-dot" />
+            <div className="lp-proof-item"><strong>8,400+</strong> AI messages</div>
+            <span className="lp-proof-dot" />
+            <div className="lp-proof-item"><strong>340+</strong> meetings booked</div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ═══ PROBLEM ═══ */}
+      <section className="lp-section">
+        <div className="lp-container">
+          <motion.div className="lp-section-head" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            <span className="lp-label">THE PROBLEM</span>
+            <h2>Outbound is broken. You know it.</h2>
+          </motion.div>
+
+          <motion.div className="lp-problem-grid" variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             {[
-              { icon: <Database size={24}/>, title: 'Lead Identification', desc: 'Aggregates prospects from public sources.' },
-              { icon: <Layers size={24}/>, title: 'Data Enrichment', desc: 'Appends firmographic and verified contact data.' },
-              { icon: <Cpu size={24}/>, title: 'AI Personalization', desc: 'Generates context-aware message variants.' },
-              { icon: <Send size={24}/>, title: 'Automated Outreach', desc: 'Executes sending based on optimized schedules.' },
-              { icon: <BarChart size={24}/>, title: 'Reply Tracking', desc: 'Monitors inbox sentiment and engagement limits.' }
-            ].map((step, idx) => (
-              <div key={idx} className="step-card">
-                <div className="step-icon">{step.icon}</div>
-                <h3 className="step-title">{step.title}</h3>
-                <p className="step-desc">{step.desc}</p>
-                {idx < 4 && <ArrowRight size={16} className="step-arrow" />}
-              </div>
+              { icon: <Clock size={24} />, title: 'Manual prospecting', desc: "You're spending 4 hours finding 20 leads. The math doesn't work." },
+              { icon: <Target size={24} />, title: 'Generic outreach', desc: 'Templates get ignored. Personalization at scale is impossible manually.' },
+              { icon: <Users size={24} />, title: 'Tool fatigue', desc: "You're stitching together 6 tools that don't talk to each other." },
+              { icon: <BarChart3 size={24} />, title: 'No pipeline visibility', desc: "You have no idea what's working, what's broken, or what to fix." },
+            ].map((item, i) => (
+              <motion.div key={i} className="lp-problem-card" variants={fadeUp} custom={i}>
+                <div className="lp-problem-icon">{item.icon}</div>
+                <h3>{item.title}</h3>
+                <p>{item.desc}</p>
+              </motion.div>
             ))}
-          </div>
-        </section>
+          </motion.div>
 
-        {/* 4. SAMPLE WORKFLOW RUN */}
-        <section className="section simulation-section">
-          <div className="section-header">
-            <h2 className="section-title">Workflow Simulation</h2>
-            <p className="section-description">Example execution payload & system response.</p>
-          </div>
+          <motion.p className="lp-transition" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            What if your entire outbound pipeline ran itself?
+          </motion.p>
+        </div>
+      </section>
 
-          <div className="simulation-grid">
-            <div className="simulation-card input-card">
-              <div className="card-header">
-                <Code size={16} /> Runtime Input
-              </div>
-              <div className="card-body terminal-text">
-                <p><span className="keyword">industry:</span> 'B2B SaaS Foundations'</p>
-                <p><span className="keyword">target_audience:</span> 'VP of Engineering, CTO'</p>
-                <p><span className="keyword">location:</span> 'North America, Remote'</p>
-              </div>
-            </div>
+      {/* ═══ SOLUTION ═══ */}
+      <section className="lp-section lp-section-alt">
+        <div className="lp-container">
+          <motion.div className="lp-section-head" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            <span className="lp-label">THE SOLUTION</span>
+            <h2>One engine. Full pipeline. Zero busywork.</h2>
+            <p className="lp-section-sub">ZOKA replaces your entire outbound stack with a single AI-powered system.</p>
+          </motion.div>
 
-            <div className="simulation-card output-card">
-              <div className="card-header">
-                <Server size={16} /> Process Output
-              </div>
-              <div className="card-body">
-                <div className="stat-row">
-                  <span>Leads Extracted:</span>
-                  <strong>1,245</strong>
-                </div>
-                <div className="stat-row">
-                  <span>Enrichment Success:</span>
-                  <strong>89.4% (1,113 Validated)</strong>
-                </div>
-                <div className="stat-row">
-                  <span>AI Variants Generated:</span>
-                  <strong>3 base frames, 1k+ dynamic nodes.</strong>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+          <motion.div className="lp-solution-grid" variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            {[
+              { icon: <Search size={28} />, label: 'AI Prospecting', desc: 'Sources and scores leads from public data — automatically.', color: 'blue' },
+              { icon: <PenTool size={28} />, label: 'AI Copywriting', desc: 'Writes personalized outreach using live prospect context.', color: 'purple' },
+              { icon: <Send size={28} />, label: 'Sequence Execution', desc: 'Multi-step cadences that send, track, and retry — on autopilot.', color: 'emerald' },
+              { icon: <BarChart3 size={28} />, label: 'Pipeline Intelligence', desc: "Real-time insights: what's converting, what's dying, what to fix.", color: 'cyan' },
+            ].map((item, i) => (
+              <motion.div key={i} className={`lp-solution-card lp-accent-${item.color}`} variants={fadeUp} custom={i}>
+                <div className="lp-solution-icon">{item.icon}</div>
+                <h3>{item.label}</h3>
+                <p>{item.desc}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
 
-        {/* 5. SAMPLE DATA OUTPUT */}
-        <section className="section data-section">
-          <div className="section-header">
-            <h2 className="section-title">Enriched Data Sample</h2>
-            <p className="section-description">Structured output post-enrichment and personalization engine logic.</p>
-          </div>
-          
-          <div className="data-table-wrapper">
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Company</th>
-                  <th>Email (Mock)</th>
-                  <th>Generated Message Snippet</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Sarah Jenkins</td>
-                  <td>CloudScale Inc.</td>
-                  <td>s.jenkins@cloudscale.ex</td>
-                  <td>"Noticed CloudScale's recent push into serverless deployments. Our infrastructure tool handles..."</td>
-                </tr>
-                <tr>
-                  <td>David Chen</td>
-                  <td>Finix Analytics</td>
-                  <td>dchen@finix.ex</td>
-                  <td>"Saw your talk on data latency at DataCon. I built a pipeline system that reduces query time by..."</td>
-                </tr>
-                <tr>
-                  <td>Elena Rostova</td>
-                  <td>LogisTech Solutions</td>
-                  <td>elena.r@logistech.ex</td>
-                  <td>"As logistics tech scales, routing APIs become bottlenecks. We engineered a robust..."</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
+      {/* ═══ HOW IT WORKS ═══ */}
+      <section className="lp-section">
+        <div className="lp-container">
+          <motion.div className="lp-section-head" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            <span className="lp-label">HOW IT WORKS</span>
+            <h2>From zero to pipeline in 4 steps.</h2>
+          </motion.div>
 
-        {/* 6. SYSTEM ARCHITECTURE */}
-        <section className="section architecture-section">
-          <div className="section-header">
-            <h2 className="section-title">Architecture Overview</h2>
-            <p className="section-description">High-level components of the outbound engine.</p>
-          </div>
+          <motion.div className="lp-steps-row" variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            {[
+              { num: '01', title: 'Source', desc: 'AI finds your ideal prospects' },
+              { num: '02', title: 'Route', desc: 'Prospects are routed into sequences' },
+              { num: '03', title: 'Write', desc: 'AI generates personalized copy variants' },
+              { num: '04', title: 'Send & Track', desc: 'Sequences execute, track, and optimize' },
+            ].map((step, i) => (
+              <motion.div key={i} className="lp-step" variants={fadeUp} custom={i}>
+                <div className="lp-step-num">{step.num}</div>
+                <h3>{step.title}</h3>
+                <p>{step.desc}</p>
+                {i < 3 && <div className="lp-step-connector" />}
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
 
-          <div className="arch-grid">
-            <div className="arch-node">
-              <Database size={32} />
-              <h4>1. Sourcing Layer</h4>
-              <p>API integrations & scraping nodes pulling raw signals and basic contact objects.</p>
-            </div>
-            <div className="arch-node">
-              <Layers size={32} />
-              <h4>2. Enrichment & Validation</h4>
-              <p>Waterfall logic against multiple data providers. SMTP ping validation to verify deliverability.</p>
-            </div>
-            <div className="arch-node">
-              <Cpu size={32} />
-              <h4>3. Prompt Processing</h4>
-              <p>LLM agents parsing lead context matching against internal solution matrices to draft copy.</p>
-            </div>
-            <div className="arch-node">
-              <Send size={32} />
-              <h4>4. Execution Controller</h4>
-              <p>Distribution across managed sender domains with throttled cron jobs for optimal inbox placement.</p>
-            </div>
-          </div>
-        </section>
-
-        {/* 7. USE CASES & 8. LIMITATIONS */}
-        <section className="section split-section">
-          <div className="split-col usecases">
-            <h2 className="section-title">Ideal Use Cases</h2>
-            <ul className="custom-list">
-              <li><CheckCircle2 size={16}/> <strong>B2B Startups</strong> lacking internal lead generation teams.</li>
-              <li><CheckCircle2 size={16}/> <strong>Agencies</strong> building automated growth operations for clients.</li>
-              <li><CheckCircle2 size={16}/> <strong>SaaS Founders</strong> seeking highly targeted beta users.</li>
-              <li><CheckCircle2 size={16}/> <strong>Consultancies</strong> identifying high-intent accounts.</li>
-            </ul>
-          </div>
-          
-          <div className="split-col limitations">
-            <h2 className="section-title">System Limitations</h2>
-            <div className="limit-box">
-              <ShieldAlert size={20} className="limit-icon" />
-              <div>
-                <p><strong>Prototype constraints:</strong></p>
-                <ul>
-                  <li>Currently scaled for demonstration payloads.</li>
-                  <li>Requires custom API keys and domain setups per client.</li>
-                  <li>Not a plug-and-play SaaS—requires engineer-assisted onboarding.</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* 9. WHAT I CAN BUILD & 10. CTA */}
-        <section className="section cta-section" id="contact">
-          <div className="cta-content">
-            <h2 className="section-title">Custom Infrastructure Available</h2>
-            <p className="section-description">
-              I specialize in moving beyond generic no-code tools to engineer robust, bespoke outbound systems tailored specifically to your data sources and sales flow.
+      {/* ═══ DEMO ═══ */}
+      <section className="lp-demo">
+        <div className="lp-demo-glow" />
+        <div className="lp-container">
+          <motion.div className="lp-section-head" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            <span className="lp-label lp-label-live"><span className="lp-live-dot" /> LIVE SYSTEM</span>
+            <h2>Step inside the engine.</h2>
+            <p className="lp-section-sub">
+              This isn't a mockup. Below is a live system — sourcing prospects,
+              generating copy, and executing sequences in real time.
             </p>
-            
-            <div className="service-tags">
-              <span className="tag">Custom Outbound Systems</span>
-              <span className="tag">Automated Lead Pipelines</span>
-              <span className="tag">AI Outreach Workflows</span>
-              <span className="tag">Infrastructure Setup</span>
-            </div>
+          </motion.div>
 
-            <div className="cta-box">
-              <h3>Let’s engineer your outbound system.</h3>
-              <p>Discuss your architecture needs and see how this prototype scales to production.</p>
-              <button className="btn-primary large">Book a Technical Call</button>
+          <motion.div className="lp-demo-chips" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            <div className="lp-chip"><Zap size={14} /> AI is active</div>
+            <div className="lp-chip"><BarChart3 size={14} /> Live data</div>
+            <div className="lp-chip"><Sparkles size={14} /> Real execution</div>
+          </motion.div>
+
+          <motion.div className="lp-demo-container" variants={scaleIn} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }}>
+            <div className="lp-demo-topbar">
+              <div className="lp-demo-dots">
+                <span /><span /><span />
+              </div>
+              <span className="lp-demo-url">zoka.works/dashboard</span>
+              <div className="lp-demo-live-badge"><span className="lp-live-dot" /> Live</div>
             </div>
-          </div>
-        </section>
-        
-        <footer className="landing-footer">
-          <p>Built as an engineering demonstration.</p>
-        </footer>
-      </div>
+            <div className="lp-demo-frame">
+              <iframe
+                src="/dashboard"
+                title="ZOKA Dashboard Demo"
+                className="lp-demo-iframe"
+              />
+            </div>
+          </motion.div>
+
+          <motion.div className="lp-demo-cta" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            <p>Like what you see?</p>
+            <h3>You don't need to build this. We build and operate it for you.</h3>
+            <button className="lp-btn lp-btn-primary" onClick={() => navigate('/dashboard')}>
+              <Monitor size={16} /> Explore Full Dashboard
+            </button>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ═══ WHAT YOU GET ═══ */}
+      <section className="lp-section lp-section-alt">
+        <div className="lp-container">
+          <motion.div className="lp-section-head" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            <span className="lp-label">DELIVERABLES</span>
+            <h2>Not a tool. A system that runs for you.</h2>
+          </motion.div>
+
+          <motion.div className="lp-benefits-grid" variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            {[
+              'Full outbound engine — prospect sourcing → copy → delivery → tracking',
+              'AI copywriting layer — every message personalized to the recipient',
+              'Multi-step sequences — automated cadences with retry logic',
+              'Real-time pipeline — see every prospect, message, and reply',
+              `Performance intelligence — AI surfaces what's working and what's not`,
+              'Continuous optimization — we tune the system based on live data',
+            ].map((item, i) => (
+              <motion.div key={i} className="lp-benefit" variants={fadeUp} custom={i}>
+                <CheckCircle2 size={20} className="lp-benefit-check" />
+                <span>{item}</span>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ═══ OFFER ═══ */}
+      <section className="lp-section" id="offer">
+        <div className="lp-container">
+          <motion.div className="lp-section-head" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            <span className="lp-label">THE OFFER</span>
+            <h2>We build your outbound engine. You close the deals.</h2>
+            <p className="lp-section-sub">
+              This isn't software you sign up for.
+              It's a system we build, deploy, and operate — for your business.
+            </p>
+          </motion.div>
+
+          <motion.div className="lp-offer-card" variants={scaleIn} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            <div className="lp-offer-header">
+              <Sparkles size={20} />
+              <h3>ZOKA Engine Build</h3>
+            </div>
+            <ul className="lp-offer-list">
+              <li><CheckCircle2 size={16} /> Custom prospect targeting</li>
+              <li><CheckCircle2 size={16} /> AI copy calibrated to your ICP</li>
+              <li><CheckCircle2 size={16} /> Full sequence deployment</li>
+              <li><CheckCircle2 size={16} /> Real-time pipeline dashboard</li>
+              <li><CheckCircle2 size={16} /> 30-day optimization cycle</li>
+            </ul>
+            <button className="lp-btn lp-btn-primary lp-btn-lg">
+              Book Your Build <ArrowRight size={16} />
+            </button>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ═══ FINAL CTA ═══ */}
+      <section className="lp-final-cta">
+        <div className="lp-final-cta-glow" />
+        <div className="lp-container">
+          <motion.div className="lp-final-cta-content" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            <h2>Your pipeline should be running by now.</h2>
+            <p>Every day without a system is a day without pipeline.</p>
+            <button className="lp-btn lp-btn-primary lp-btn-lg">
+              Book Your Engine <ArrowRight size={16} />
+            </button>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ═══ FOOTER ═══ */}
+      <footer className="lp-footer">
+        <div className="lp-container">
+          <p>© 2026 Zoka Works · AI Outbound Infrastructure</p>
+        </div>
+      </footer>
     </div>
   );
 }
