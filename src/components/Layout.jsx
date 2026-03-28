@@ -3,16 +3,23 @@ import { Outlet, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import { Search, Bell, Activity, Clock, Radio, Menu, X } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const pageTitles = {
-  '/dashboard': 'Dashboard',
-  '/leads': 'Leads',
-  '/campaigns': 'Campaigns',
-  '/ai-engine': 'AI Engine',
-  '/email-engine': 'Email Engine',
-  '/analytics': 'Analytics',
-  '/optimization': 'Optimization',
-  '/settings': 'Settings',
+  '/dashboard': 'Mission Control',
+  '/leads': 'Prospects',
+  '/campaigns': 'Sequences',
+  '/ai-engine': 'AI Copywriter',
+  '/email-engine': 'Delivery',
+  '/analytics': 'Insights',
+  '/optimization': 'Signals',
+  '/settings': 'System',
+};
+
+const pageTransition = {
+  initial: { opacity: 0, y: 10 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.25, 0.1, 0.25, 1] } },
+  exit: { opacity: 0, y: -6, transition: { duration: 0.18, ease: [0.25, 0.1, 0.25, 1] } },
 };
 
 export default function Layout() {
@@ -57,13 +64,20 @@ export default function Layout() {
           </button>
         </div>
       </div>
-      <main className="main-content animate-fade-in" key={location.pathname}>
+      <main className="main-content">
         {state.isDemoMode && (
           <div style={{ marginBottom: 'var(--space-4)' }} className="badge badge-amber">
             Simulated system — demo purposes only
           </div>
         )}
-        <Outlet />
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={location.pathname}
+            {...pageTransition}
+          >
+            <Outlet />
+          </motion.div>
+        </AnimatePresence>
       </main>
     </div>
   );

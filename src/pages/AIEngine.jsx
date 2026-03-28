@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { Copy, Sparkles } from 'lucide-react';
+import { MotionPage, MotionCard } from '../components/motion';
 
 export default function AIEngine() {
   const { state, actions } = useApp();
@@ -30,11 +31,11 @@ export default function AIEngine() {
   };
 
   return (
-    <div className="animate-slide-up">
+    <MotionPage>
       <div className="page-header">
         <div className="page-header-left">
-          <h1>AI Engine</h1>
-          <p>Generate personalized message variations from live lead profile data.</p>
+          <h1>AI Copywriter</h1>
+          <p>Generate context-aware copy from live prospect signals.</p>
         </div>
       </div>
 
@@ -42,18 +43,18 @@ export default function AIEngine() {
         <div className="card">
           <div className="card-header">
             <div>
-              <div className="card-title">Lead Input</div>
-              <div className="card-subtitle">Select a lead to produce 2-3 personalized variants.</div>
+              <div className="card-title">Select Prospect</div>
+              <div className="card-subtitle">Choose a prospect to generate AI-written variants.</div>
             </div>
           </div>
 
           <div className="form-group">
-            <label className="form-label">Lead</label>
+            <label className="form-label">Prospect</label>
             <select className="form-select" value={selectedLeadId} onChange={(event) => setSelectedLeadId(event.target.value)}>
-              <option value="">Select lead...</option>
+              <option value="">Select prospect...</option>
               {state.leads.map((lead) => (
                 <option key={lead.id} value={lead.id}>
-                  {lead.name} - {lead.company}
+                  {lead.name} — {lead.company}
                 </option>
               ))}
             </select>
@@ -66,45 +67,52 @@ export default function AIEngine() {
                 {selectedLead.title} at {selectedLead.company}
               </p>
               <p style={{ color: 'var(--text-tertiary)', fontSize: 'var(--font-sm)' }}>
-                Email: {selectedLead.email || 'No Email'}
+                Email: {selectedLead.email || 'Unverified'}
               </p>
               <p style={{ color: 'var(--text-tertiary)', fontSize: 'var(--font-sm)' }}>
-                Campaign: {state.campaigns.find((campaign) => campaign.id === selectedLead.campaignId)?.name || 'Unassigned'}
+                Sequence: {state.campaigns.find((campaign) => campaign.id === selectedLead.campaignId)?.name || 'Unrouted'}
               </p>
             </div>
           )}
 
-          <button className="btn btn-primary btn-lg mt-4" style={{ width: '100%' }} onClick={handleGenerate} disabled={!selectedLead || state.system.isGeneratingMessages}>
+          <button
+            className="btn btn-primary btn-lg mt-4"
+            style={{ width: '100%' }}
+            onClick={handleGenerate}
+            disabled={!selectedLead || state.system.isGeneratingMessages}
+            title="AI analyzes the prospect's profile and crafts personalized message variants."
+          >
             <Sparkles size={16} />
-            {state.system.isGeneratingMessages ? 'Generating...' : 'Generate Messages'}
+            {state.system.isGeneratingMessages ? 'Generating...' : 'Generate Copy'}
           </button>
         </div>
 
         <div className="card">
           <div className="card-header">
             <div>
-              <div className="card-title">Generated Output</div>
-              <div className="card-subtitle">Persisted in global store and reused during campaign runs.</div>
+              <div className="card-title">AI-Generated Copy</div>
+              <div className="card-subtitle">Saved to system memory. Reused across sequences.</div>
             </div>
             <button className="btn btn-ghost btn-sm" onClick={copyAll} disabled={!generatedRecord}>
-              <Copy size={14} /> {copied ? 'Copied' : 'Copy All'}
+              <Copy size={14} /> {copied ? 'Copied' : 'Copy to Clipboard'}
             </button>
           </div>
 
           {!generatedRecord && (
-            <div className="empty-state" style={{ padding: 'var(--space-8)' }}>
-              <h3>No messages generated yet</h3>
-              <p>Pick a lead and run generation to populate AI outputs.</p>
+            <div className="empty-state-block">
+              <Sparkles size={32} className="empty-state-icon" />
+              <h3>Waiting for input</h3>
+              <p>Select a prospect and generate personalized copy.</p>
             </div>
           )}
 
           {generatedRecord && (
             <div style={{ display: 'grid', gap: 'var(--space-3)' }}>
-              <div className="badge badge-purple">
+              <div className="badge badge-purple" title="How closely the AI matched the copy to the prospect's specific context.">
                 Personalization Score: {generatedRecord.personalizationScore}%
               </div>
               <div className="card" style={{ background: 'var(--bg-tertiary)' }}>
-                <div className="card-title" style={{ marginBottom: 'var(--space-2)' }}>Why Generated</div>
+                <div className="card-title" style={{ marginBottom: 'var(--space-2)' }}>Personalization Logic</div>
                 <div style={{ display: 'grid', gap: 'var(--space-2)' }}>
                   {generatedRecord.reasoning?.map((reason) => (
                     <div key={reason} style={{ color: 'var(--text-secondary)', fontSize: 'var(--font-sm)' }}>
@@ -115,7 +123,7 @@ export default function AIEngine() {
               </div>
               {generatedRecord.variations.map((variation, index) => (
                 <div key={`${generatedRecord.leadId}-${index}`} className="ai-output">
-                  <div className="ai-output-label">Variation</div>
+                  <div className="ai-output-label">Variant {index + 1}</div>
                   <div className="ai-output-content">{variation}</div>
                 </div>
               ))}
@@ -123,6 +131,6 @@ export default function AIEngine() {
           )}
         </div>
       </div>
-    </div>
+    </MotionPage>
   );
 }

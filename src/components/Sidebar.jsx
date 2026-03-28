@@ -8,35 +8,35 @@ const navSections = [
   {
     title: 'Entry',
     items: [
-      { path: '/', icon: House, label: 'Home' },
+      { path: '/', icon: House, label: 'Command Center' },
     ]
   },
   {
     title: 'Overview',
     items: [
-      { path: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+      { path: '/dashboard', icon: LayoutDashboard, label: 'Mission Control' },
     ]
   },
   {
     title: 'Outreach',
     items: [
-      { path: '/leads', icon: Users, label: 'Leads' },
-      { path: '/campaigns', icon: Rocket, label: 'Campaigns' },
-      { path: '/ai-engine', icon: Sparkles, label: 'AI Engine' },
-      { path: '/email-engine', icon: Mail, label: 'Email Engine' },
+      { path: '/leads', icon: Users, label: 'Prospects' },
+      { path: '/campaigns', icon: Rocket, label: 'Sequences' },
+      { path: '/ai-engine', icon: Sparkles, label: 'AI Copywriter' },
+      { path: '/email-engine', icon: Mail, label: 'Delivery' },
     ]
   },
   {
-    title: 'Insights',
+    title: 'Intelligence',
     items: [
-      { path: '/analytics', icon: BarChart3, label: 'Analytics' },
-      { path: '/optimization', icon: TrendingUp, label: 'Optimization' },
+      { path: '/analytics', icon: BarChart3, label: 'Insights' },
+      { path: '/optimization', icon: TrendingUp, label: 'Signals' },
     ]
   },
   {
     title: 'System',
     items: [
-      { path: '/settings', icon: Settings, label: 'Settings' },
+      { path: '/settings', icon: Settings, label: 'System' },
     ]
   },
 ];
@@ -50,7 +50,7 @@ export default function Sidebar({ isOpen, onClose }) {
         </div>
         <div className="sidebar-brand">
           <h1>Zoka Works</h1>
-          <span>Cold Email Engine</span>
+          <span>AI Outbound Engine</span>
         </div>
       </div>
 

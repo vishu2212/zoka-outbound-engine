@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { Plus, Users } from 'lucide-react';
+import { Plus, Users, Search } from 'lucide-react';
+import { MotionPage, StaggerGrid, MotionStatCard, MotionCard } from '../components/motion';
 
 function statusBadge(status) {
   if (status === 'Replied') return 'badge-emerald';
@@ -48,48 +49,53 @@ export default function Leads() {
   };
 
   return (
-    <div className="animate-slide-up">
+    <MotionPage>
       <div className="page-header">
         <div className="page-header-left">
-          <h1>Leads</h1>
-          <p>Generate leads, track quality, and assign records into active campaigns.</p>
+          <h1>Prospects</h1>
+          <p>AI-sourced contacts, scored and ready for outreach.</p>
         </div>
         <div className="page-header-right">
-          <button className="btn btn-primary" onClick={() => actions.generateLeads()} disabled={state.system.isGeneratingLeads}>
-            <Users size={16} /> {state.system.isGeneratingLeads ? 'Generating...' : 'Generate Leads'}
+          <button
+            className="btn btn-primary"
+            onClick={() => actions.generateLeads()}
+            disabled={state.system.isGeneratingLeads}
+            title="AI will pull and score prospects from configured data sources."
+          >
+            <Users size={16} /> {state.system.isGeneratingLeads ? 'Sourcing...' : 'Source Prospects'}
           </button>
         </div>
       </div>
 
-      <div className="metrics-grid" style={{ gridTemplateColumns: 'repeat(3, minmax(0, 1fr))' }}>
-        <div className="metric-card">
+      <StaggerGrid className="metrics-grid" style={{ gridTemplateColumns: 'repeat(3, minmax(0, 1fr))' }}>
+        <MotionStatCard className="metric-card">
           <div className="metric-icon blue"><Users size={22} /></div>
           <div className="metric-content">
             <div className="metric-value">{state.leads.length}</div>
-            <div className="metric-label">Total Leads</div>
+            <div className="metric-label">Prospects Sourced</div>
           </div>
-        </div>
-        <div className="metric-card">
+        </MotionStatCard>
+        <MotionStatCard className="metric-card">
           <div className="metric-icon amber"><Plus size={22} /></div>
           <div className="metric-content">
             <div className="metric-value">{missingEmails}</div>
-            <div className="metric-label">Missing Emails</div>
+            <div className="metric-label">Unverified Contacts</div>
           </div>
-        </div>
-        <div className="metric-card">
+        </MotionStatCard>
+        <MotionStatCard className="metric-card">
           <div className="metric-icon emerald"><Users size={22} /></div>
           <div className="metric-content">
             <div className="metric-value">{selectedCount}</div>
-            <div className="metric-label">Selected</div>
+            <div className="metric-label">Marked for Action</div>
           </div>
-        </div>
-      </div>
+        </MotionStatCard>
+      </StaggerGrid>
 
       <div className="card mt-6">
         <div className="card-header">
           <div>
-            <div className="card-title">Lead Assignment</div>
-            <div className="card-subtitle">Select leads and assign them to a campaign workflow.</div>
+            <div className="card-title">Route to Sequence</div>
+            <div className="card-subtitle">Route prospects into an active sequence.</div>
           </div>
         </div>
         <div className="flex-row gap-3 flex-wrap">
@@ -108,15 +114,15 @@ export default function Leads() {
           >
             {state.campaigns.map((campaign) => (
               <option key={campaign.id} value={campaign.id}>
-                {campaign.name} ({campaign.leadIds.length} leads)
+                {campaign.name} ({campaign.leadIds.length} prospects)
               </option>
             ))}
           </select>
           <button className="btn btn-success" onClick={handleAssignSelected} disabled={!selectedCount || !selectedCampaignId}>
-            Assign Selected ({selectedCount})
+            Route Selected ({selectedCount})
           </button>
           <button className="btn btn-ghost" onClick={toggleAllVisible}>
-            Toggle Visible
+            Select All Visible
           </button>
         </div>
       </div>
@@ -132,7 +138,7 @@ export default function Leads() {
               <th>Score</th>
               <th>Status</th>
               <th>Stage</th>
-              <th>Campaign</th>
+              <th>Sequence</th>
             </tr>
           </thead>
           <tbody>
@@ -145,16 +151,30 @@ export default function Leads() {
                   </td>
                   <td className="cell-primary">{lead.name}</td>
                   <td>{lead.company}</td>
-                  <td>{lead.email || 'No Email'}</td>
+                  <td>{lead.email || 'Unverified'}</td>
                   <td>{lead.score}</td>
                   <td>
                     <span className={`badge ${statusBadge(lead.status)}`}>{lead.status}</span>
                   </td>
                   <td>{lead.stage}</td>
-                  <td>{campaign ? campaign.name : 'Unassigned'}</td>
+                  <td>{campaign ? campaign.name : 'Unrouted'}</td>
                 </tr>
               );
             })}
+            {filteredLeads.length === 0 && (
+              <tr>
+                <td colSpan={8}>
+                  <div className="empty-state-block">
+                    <Users size={32} className="empty-state-icon" />
+                    <h3>No prospects in the pipeline</h3>
+                    <p>Source your first batch to activate the system.</p>
+                    <button className="btn btn-primary btn-sm" onClick={() => actions.generateLeads()} disabled={state.system.isGeneratingLeads}>
+                      Source Prospects →
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
@@ -174,15 +194,15 @@ export default function Leads() {
               </div>
               <div className="mobile-data-card-row">
                 <span>Email</span>
-                <span>{lead.email || 'No Email'}</span>
+                <span>{lead.email || 'Unverified'}</span>
               </div>
               <div className="mobile-data-card-row">
                 <span>Score</span>
                 <span>{lead.score}</span>
               </div>
               <div className="mobile-data-card-row">
-                <span>Campaign</span>
-                <span>{campaign ? campaign.name : 'Unassigned'}</span>
+                <span>Sequence</span>
+                <span>{campaign ? campaign.name : 'Unrouted'}</span>
               </div>
               <label className="mobile-data-card-row">
                 <span>Select</span>
@@ -192,6 +212,6 @@ export default function Leads() {
           );
         })}
       </div>
-    </div>
+    </MotionPage>
   );
 }

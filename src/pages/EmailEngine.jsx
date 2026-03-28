@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { Mail, Pause, Play, RotateCw } from 'lucide-react';
+import { MotionPage, StaggerGrid, MotionStatCard } from '../components/motion';
 
 function badgeForStatus(status, deliveryStatus) {
   if (deliveryStatus === 'No Email') return 'badge-rose';
@@ -36,11 +37,11 @@ export default function EmailEngine() {
   const failedCount = campaignEmails.filter((email) => email.status === 'failed').length;
 
   return (
-    <div className="animate-slide-up">
+    <MotionPage>
       <div className="page-header">
         <div className="page-header-left">
-          <h1>Email Engine</h1>
-          <p>Execute Day 1/3/7 sequence delivery with failure handling and retries.</p>
+          <h1>Delivery</h1>
+          <p>Automated send execution with real-time status tracking.</p>
         </div>
         <div className="page-header-right">
           <select className="form-select" value={campaignId} onChange={(event) => setCampaignId(event.target.value)} style={{ minWidth: 280 }}>
@@ -50,55 +51,70 @@ export default function EmailEngine() {
               </option>
             ))}
           </select>
-          <button className="btn btn-primary" onClick={() => actions.sendEmails(selectedCampaignId)} disabled={!selectedCampaign || !selectedCampaign.leadIds.length || state.system.isSendingEmails}>
-            <Play size={16} /> {state.system.isSendingEmails ? 'Sending...' : 'Send Sequence'}
+          <button
+            className="btn btn-primary"
+            onClick={() => actions.sendEmails(selectedCampaignId)}
+            disabled={!selectedCampaign || !selectedCampaign.leadIds.length || state.system.isSendingEmails}
+            title="Deploy the outreach cadence with throttled sending."
+          >
+            <Play size={16} /> {state.system.isSendingEmails ? 'Delivering...' : 'Start Delivery'}
           </button>
-          <button className="btn btn-secondary" onClick={() => actions.pauseCampaign(selectedCampaignId)} disabled={!state.system.isSendingEmails}>
-            <Pause size={16} /> Pause
+          <button
+            className="btn btn-secondary"
+            onClick={() => actions.pauseCampaign(selectedCampaignId)}
+            disabled={!state.system.isSendingEmails}
+            title="Pause delivery mid-sequence. Resumes from the current step."
+          >
+            <Pause size={16} /> Hold
           </button>
-          <button className="btn btn-ghost" onClick={() => actions.retryFailedEmails(selectedCampaignId)} disabled={!failedCount}>
-            <RotateCw size={16} /> Retry Failed
+          <button
+            className="btn btn-ghost"
+            onClick={() => actions.retryFailedEmails(selectedCampaignId)}
+            disabled={!failedCount}
+            title="Re-attempt delivery for all messages that failed on previous sends."
+          >
+            <RotateCw size={16} /> Retry Failures
           </button>
         </div>
       </div>
 
-      <div className="metrics-grid" style={{ gridTemplateColumns: 'repeat(4, minmax(0, 1fr))' }}>
-        <div className="metric-card">
+      <StaggerGrid className="metrics-grid" style={{ gridTemplateColumns: 'repeat(4, minmax(0, 1fr))' }}>
+        <MotionStatCard className="metric-card">
           <div className="metric-icon blue"><Mail size={22} /></div>
           <div className="metric-content">
             <div className="metric-value">{sentCount}</div>
-            <div className="metric-label">Sent</div>
+            <div className="metric-label">Delivered</div>
           </div>
-        </div>
-        <div className="metric-card">
+        </MotionStatCard>
+        <MotionStatCard className="metric-card">
           <div className="metric-icon emerald"><Mail size={22} /></div>
           <div className="metric-content">
             <div className="metric-value">{openedCount}</div>
-            <div className="metric-label">Opened</div>
+            <div className="metric-label">Engaged</div>
           </div>
-        </div>
-        <div className="metric-card">
+        </MotionStatCard>
+        <MotionStatCard className="metric-card">
           <div className="metric-icon purple"><Mail size={22} /></div>
           <div className="metric-content">
             <div className="metric-value">{repliedCount}</div>
-            <div className="metric-label">Replied</div>
+            <div className="metric-label">Conversations</div>
           </div>
-        </div>
-        <div className="metric-card">
+        </MotionStatCard>
+        <MotionStatCard className="metric-card">
           <div className="metric-icon rose"><Mail size={22} /></div>
           <div className="metric-content">
             <div className="metric-value">{failedCount}</div>
-            <div className="metric-label">Failed</div>
+            <div className="metric-label">Delivery Failures</div>
           </div>
-        </div>
-      </div>
+        </MotionStatCard>
+      </StaggerGrid>
 
       <div className="grid-2 mt-6" style={{ alignItems: 'start' }}>
         <div className="card">
           <div className="card-header">
             <div>
-              <div className="card-title">Sequence Definition</div>
-              <div className="card-subtitle">Three-step send schedule used by the simulator.</div>
+              <div className="card-title">Outreach Cadence</div>
+              <div className="card-subtitle">Multi-touch cadence powering your outreach.</div>
             </div>
           </div>
           <div className="sequence-timeline">
@@ -108,8 +124,8 @@ export default function EmailEngine() {
                 <div className="step-line"></div>
               </div>
               <div className="step-content">
-                <h4>Day 1 Intro</h4>
-                <p>Initial personalized outreach email.</p>
+                <h4>Day 1 — Initial Touch</h4>
+                <p>Personalized outreach with context-aware opening.</p>
               </div>
             </div>
             <div className="sequence-step">
@@ -118,7 +134,7 @@ export default function EmailEngine() {
                 <div className="step-line"></div>
               </div>
               <div className="step-content">
-                <h4>Day 3 Follow-up</h4>
+                <h4>Day 3 — Value Follow-up</h4>
                 <p>Contextual follow-up with proof point.</p>
               </div>
             </div>
@@ -127,8 +143,8 @@ export default function EmailEngine() {
                 <div className="step-dot">3</div>
               </div>
               <div className="step-content">
-                <h4>Day 7 Reminder</h4>
-                <p>Final reminder if no reply yet.</p>
+                <h4>Day 7 — Final Signal</h4>
+                <p>Last touch before sequence close.</p>
               </div>
             </div>
           </div>
@@ -137,16 +153,16 @@ export default function EmailEngine() {
         <div className="card">
           <div className="card-header">
             <div>
-              <div className="card-title">Campaign Delivery Summary</div>
-              <div className="card-subtitle">{selectedCampaign ? selectedCampaign.name : 'No campaign selected'}</div>
+              <div className="card-title">Delivery Overview</div>
+              <div className="card-subtitle">{selectedCampaign ? selectedCampaign.name : 'No sequence selected'}</div>
             </div>
           </div>
           {selectedCampaign && (
             <div style={{ display: 'grid', gap: 'var(--space-3)' }}>
-              <span className="badge badge-blue">Leads assigned: {selectedCampaign.leadIds.length}</span>
-              <span className="badge badge-emerald">Sent count: {selectedCampaign.sentCount}</span>
-              <span className="badge badge-purple">Reply count: {selectedCampaign.replyCount}</span>
-              <span className="badge badge-rose">Failed count: {selectedCampaign.failedCount}</span>
+              <span className="badge badge-blue">Prospects assigned: {selectedCampaign.leadIds.length}</span>
+              <span className="badge badge-emerald">Delivered: {selectedCampaign.sentCount}</span>
+              <span className="badge badge-purple">Conversations: {selectedCampaign.replyCount}</span>
+              <span className="badge badge-rose">Failures: {selectedCampaign.failedCount}</span>
             </div>
           )}
         </div>
@@ -156,7 +172,7 @@ export default function EmailEngine() {
         <table className="data-table">
           <thead>
             <tr>
-              <th>Lead</th>
+              <th>Prospect</th>
               <th>Step</th>
               <th>Status</th>
               <th>Attempts</th>
@@ -168,7 +184,7 @@ export default function EmailEngine() {
               const lead = state.leads.find((item) => item.id === email.leadId);
               return (
                 <tr key={email.id}>
-                  <td className="cell-primary">{lead ? lead.name : `Lead #${email.leadId}`}</td>
+                  <td className="cell-primary">{lead ? lead.name : `Prospect #${email.leadId}`}</td>
                   <td>{email.sequenceLabel}</td>
                   <td>
                     <span className={`badge ${badgeForStatus(email.status, email.deliveryStatus)}`}>
@@ -176,14 +192,18 @@ export default function EmailEngine() {
                     </span>
                   </td>
                   <td>{email.attempts || 0}</td>
-                  <td>{email.updatedAt ? new Date(email.updatedAt).toLocaleTimeString() : '-'}</td>
+                  <td>{email.updatedAt ? new Date(email.updatedAt).toLocaleTimeString() : '—'}</td>
                 </tr>
               );
             })}
             {!campaignEmails.length && (
               <tr>
-                <td colSpan={5} style={{ textAlign: 'center', color: 'var(--text-tertiary)' }}>
-                  No delivery events yet for this campaign.
+                <td colSpan={5}>
+                  <div className="empty-state-block">
+                    <Mail size={32} className="empty-state-icon" />
+                    <h3>No delivery events for this sequence</h3>
+                    <p>Execute a sequence to begin sending.</p>
+                  </div>
                 </td>
               </tr>
             )}
@@ -197,7 +217,7 @@ export default function EmailEngine() {
           return (
             <div key={`mobile-email-${email.id}`} className="mobile-data-card">
               <div className="mobile-data-card-row">
-                <strong>{lead ? lead.name : `Lead #${email.leadId}`}</strong>
+                <strong>{lead ? lead.name : `Prospect #${email.leadId}`}</strong>
                 <span className={`badge ${badgeForStatus(email.status, email.deliveryStatus)}`}>
                   {email.deliveryStatus || email.status}
                 </span>
@@ -212,12 +232,12 @@ export default function EmailEngine() {
               </div>
               <div className="mobile-data-card-row">
                 <span>Updated</span>
-                <span>{email.updatedAt ? new Date(email.updatedAt).toLocaleTimeString() : '-'}</span>
+                <span>{email.updatedAt ? new Date(email.updatedAt).toLocaleTimeString() : '—'}</span>
               </div>
             </div>
           );
         })}
       </div>
-    </div>
+    </MotionPage>
   );
 }

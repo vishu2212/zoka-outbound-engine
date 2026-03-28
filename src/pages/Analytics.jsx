@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
 import { useApp } from '../context/AppContext';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { Mail, MessageSquare, MousePointerClick, Users } from 'lucide-react';
+import { Mail, MessageSquare, MousePointerClick, Users, BarChart3 } from 'lucide-react';
+import { MotionPage, StaggerGrid, MotionStatCard, MotionCard } from '../components/motion';
 
 export default function Analytics() {
   const { state } = useApp();
@@ -28,64 +29,64 @@ export default function Analytics() {
   }, [state.campaigns]);
 
   const insightText = state.analytics.replyRate >= averageReplyRate
-    ? 'Campaign performing above average based on current reply conversion.'
-    : 'Campaign performance is below average; apply optimization suggestions to improve replies.';
+    ? 'Pipeline performing above baseline. Current sequence copy and targeting are producing strong conversion.'
+    : 'Below-baseline performance detected. Consider refining prospect targeting or adjusting AI copy parameters.';
 
   return (
-    <div className="animate-slide-up">
+    <MotionPage>
       <div className="page-header">
         <div className="page-header-left">
-          <h1>Analytics</h1>
-          <p>Metrics are fully derived from live workflow execution and persisted state.</p>
+          <h1>Insights</h1>
+          <p>AI-derived performance signals across your outbound pipeline.</p>
         </div>
       </div>
 
-      <div className="metrics-grid" style={{ gridTemplateColumns: 'repeat(4, minmax(0, 1fr))' }}>
-        <div className="metric-card">
+      <StaggerGrid className="metrics-grid" style={{ gridTemplateColumns: 'repeat(4, minmax(0, 1fr))' }}>
+        <MotionStatCard className="metric-card">
           <div className="metric-icon blue"><Users size={22} /></div>
           <div className="metric-content">
             <div className="metric-value">{state.analytics.totalLeads}</div>
-            <div className="metric-label">Leads</div>
+            <div className="metric-label">Prospects Sourced</div>
           </div>
-        </div>
-        <div className="metric-card">
+        </MotionStatCard>
+        <MotionStatCard className="metric-card">
           <div className="metric-icon emerald"><Mail size={22} /></div>
           <div className="metric-content">
             <div className="metric-value">{state.analytics.emailsSent}</div>
-            <div className="metric-label">Emails Sent</div>
+            <div className="metric-label">Messages Delivered</div>
           </div>
-        </div>
-        <div className="metric-card">
+        </MotionStatCard>
+        <MotionStatCard className="metric-card">
           <div className="metric-icon cyan"><MousePointerClick size={22} /></div>
           <div className="metric-content">
             <div className="metric-value">{state.analytics.openRate}%</div>
-            <div className="metric-label">Open Rate</div>
+            <div className="metric-label" title="Percentage of delivered messages that were opened.">Engagement Rate</div>
           </div>
-        </div>
-        <div className="metric-card">
+        </MotionStatCard>
+        <MotionStatCard className="metric-card">
           <div className="metric-icon purple"><MessageSquare size={22} /></div>
           <div className="metric-content">
             <div className="metric-value">{state.analytics.replies}</div>
-            <div className="metric-label">Replies</div>
+            <div className="metric-label">Conversations Started</div>
           </div>
-        </div>
-      </div>
+        </MotionStatCard>
+      </StaggerGrid>
 
       <div className="grid-2 mt-6" style={{ alignItems: 'start' }}>
         <div className="card">
           <div className="card-header">
             <div>
-              <div className="card-title">Funnel</div>
-              <div className="card-subtitle">Leads to Sent to Opened to Replied</div>
+              <div className="card-title">Conversion Funnel</div>
+              <div className="card-subtitle">End-to-end prospect journey.</div>
             </div>
           </div>
 
           <div style={{ display: 'grid', gap: 'var(--space-3)' }}>
             {[
-              { label: 'Leads', value: funnel.leads, className: 'var(--accent-blue)' },
-              { label: 'Sent', value: funnel.sent, className: 'var(--accent-emerald)' },
-              { label: 'Opened', value: funnel.opened, className: 'var(--accent-cyan)' },
-              { label: 'Replied', value: funnel.replied, className: 'var(--accent-purple)' },
+              { label: 'Sourced', value: funnel.leads, className: 'var(--accent-blue)' },
+              { label: 'Delivered', value: funnel.sent, className: 'var(--accent-emerald)' },
+              { label: 'Engaged', value: funnel.opened, className: 'var(--accent-cyan)' },
+              { label: 'Converted', value: funnel.replied, className: 'var(--accent-purple)' },
             ].map((item) => (
               <div key={item.label}>
                 <div className="flex-between" style={{ marginBottom: 'var(--space-1)' }}>
@@ -103,14 +104,14 @@ export default function Analytics() {
         <div className="card">
           <div className="card-header">
             <div>
-              <div className="card-title">System Conversion</div>
-              <div className="card-subtitle">Global conversion quality from email activity.</div>
+              <div className="card-title">Performance Snapshot</div>
+              <div className="card-subtitle" title="Percentage of delivered messages that generated a reply.">End-to-end conversion health.</div>
             </div>
           </div>
 
           <div style={{ display: 'grid', gap: 'var(--space-3)' }}>
-            <span className="badge badge-blue">Open Rate: {state.analytics.openRate}%</span>
-            <span className="badge badge-purple">Reply Rate: {state.analytics.replyRate}%</span>
+            <span className="badge badge-blue" title="Percentage of delivered messages that were opened.">Engagement Rate: {state.analytics.openRate}%</span>
+            <span className="badge badge-purple" title="Percentage of delivered messages that generated a reply.">Conversion Rate: {state.analytics.replyRate}%</span>
             <span className="badge badge-emerald">
               Reply-to-Open: {funnel.opened ? ((funnel.replied / funnel.opened) * 100).toFixed(1) : 0}%
             </span>
@@ -121,36 +122,44 @@ export default function Analytics() {
       <div className="card mt-6">
         <div className="card-header">
           <div>
-            <div className="card-title">Campaign Breakdown</div>
-            <div className="card-subtitle">Sent, opened, and replied counts per campaign.</div>
+            <div className="card-title">Sequence Analytics</div>
+            <div className="card-subtitle">Per-sequence engagement breakdown.</div>
           </div>
         </div>
-        <div style={{ width: '100%', height: 320 }}>
-          <ResponsiveContainer>
-            <BarChart data={campaignBreakdown}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="sent" fill="#3b82f6" />
-              <Bar dataKey="opened" fill="#10b981" />
-              <Bar dataKey="replied" fill="#8b5cf6" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+        {campaignBreakdown.length === 0 ? (
+          <div className="empty-state-block">
+            <BarChart3 size={32} className="empty-state-icon" />
+            <h3>No data to analyze yet</h3>
+            <p>Run a sequence and the system will surface patterns automatically.</p>
+          </div>
+        ) : (
+          <div style={{ width: '100%', height: 320 }}>
+            <ResponsiveContainer>
+              <BarChart data={campaignBreakdown}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="sent" fill="#3b82f6" />
+                <Bar dataKey="opened" fill="#10b981" />
+                <Bar dataKey="replied" fill="#8b5cf6" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        )}
       </div>
 
       <div className="card mt-6">
         <div className="card-header">
           <div>
-            <div className="card-title">Insight</div>
-            <div className="card-subtitle">Automated interpretation from current analytics baseline.</div>
+            <div className="card-title">AI Signal</div>
+            <div className="card-subtitle" title="System-detected pattern based on current pipeline performance.">AI-detected pattern from current pipeline data.</div>
           </div>
         </div>
         <div className={`badge ${state.analytics.replyRate >= averageReplyRate ? 'badge-emerald' : 'badge-amber'}`}>
           {insightText}
         </div>
       </div>
-    </div>
+    </MotionPage>
   );
 }
