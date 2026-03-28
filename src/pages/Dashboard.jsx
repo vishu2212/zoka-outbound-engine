@@ -1,8 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
-import { Activity, Mail, MessageSquare, Play, Pause, Plus, Users, CheckCircle2, Sparkles, Rocket } from 'lucide-react';
+import { Activity, Mail, MessageSquare, Play, Pause, Plus, Users, CheckCircle2, Search, Database, PenTool, Send, Eye, Calendar, Sparkles } from 'lucide-react';
 import { MotionPage, StaggerGrid, MotionStatCard, MotionCard } from '../components/motion';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import './Dashboard.css';
 
 const PIPELINE_STEPS = [
@@ -12,6 +12,106 @@ const PIPELINE_STEPS = [
   { key: 'delivered', label: 'Delivered' },
   { key: 'tracked', label: 'Tracked' },
 ];
+
+const useCountUp = (end, duration = 1200) => {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    let startTimestamp = null;
+    let animationFrame;
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      const easeProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+      setCount(Math.floor(easeProgress * end));
+      if (progress < 1) {
+        animationFrame = window.requestAnimationFrame(step);
+      }
+    };
+    animationFrame = window.requestAnimationFrame(step);
+    return () => window.cancelAnimationFrame(animationFrame);
+  }, [end, duration]);
+  return count;
+};
+
+const getEventIcon = (type) => {
+  switch (type) {
+    case 'source': return <Search size={14} className="blue" />;
+    case 'enrich': return <Database size={14} className="cyan" />;
+    case 'write': return <PenTool size={14} className="purple" />;
+    case 'send': return <Send size={14} className="emerald" />;
+    case 'open': return <Eye size={14} className="amber" />;
+    case 'reply': return <MessageSquare size={14} className="emerald" />;
+    case 'meeting': return <Calendar size={14} className="emerald" />;
+    case 'signal': return <Sparkles size={14} className="blue" />;
+    default: return <Activity size={14} className="cyan" />;
+  }
+};
+
+const AIActivityFeed = () => {
+  const [visibleEvents, setVisibleEvents] = useState([]);
+  
+  useEffect(() => {
+    const initialEvents = [
+      { id: 1, type: 'source', text: 'Sourced 47 prospects from LinkedIn SaaS Founders', time: '12s ago' },
+      { id: 2, type: 'enrich', text: 'Enriched 43 contacts — 91% email match rate', time: '28s ago' },
+      { id: 3, type: 'write', text: 'Generated variants for Sarah Chen @ CloudScale', time: '1m ago' },
+      { id: 4, type: 'send', text: 'Delivered batch 1/3 — 14 messages sent', time: '2m ago' },
+      { id: 5, type: 'open', text: 'David Chen opened your email (2nd view)', time: '3m ago' },
+      { id: 6, type: 'reply', text: '🔥 Elena Rostova replied — positive intent', time: '4m ago' },
+      { id: 7, type: 'signal', text: 'AI Signal: Open rate 58% — above baseline', time: '6m ago' },
+    ];
+    
+    initialEvents.forEach((event, i) => {
+      setTimeout(() => {
+        setVisibleEvents(prev => [event, ...prev].slice(0, 8));
+      }, i * 300);
+    });
+    
+    let counter = 8;
+    const interval = setInterval(() => {
+      const types = ['open', 'open', 'reply', 'signal'];
+      const type = types[Math.floor(Math.random() * types.length)];
+      const names = ['Michael G.', 'Sarah C.', 'Alex D.', 'Jessica L.', 'Isabella R.'];
+      const name = names[Math.floor(Math.random() * names.length)];
+      
+      let text = '';
+      if (type === 'open') text = `${name} opened your email`;
+      if (type === 'reply') text = `🔥 ${name} replied — scheduling meeting`;
+      if (type === 'signal') text = `Pipeline health score increased to 92/100`;
+      
+      const newEvent = { id: counter++, type, text, time: 'Just now' };
+      setVisibleEvents(prev => [newEvent, ...prev].slice(0, 8));
+    }, Math.random() * 4000 + 4000);
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="activity-list feed-list" style={{ overflow: 'hidden' }}>
+      <AnimatePresence initial={false}>
+        {visibleEvents.map((event) => (
+          <motion.div
+            key={event.id}
+            className="activity-item feed-item"
+            initial={{ opacity: 0, y: -12, height: 0, marginBottom: 0 }}
+            animate={{ opacity: 1, y: 0, height: 'auto', marginBottom: 16 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.3 }}
+            style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}
+          >
+            <div className="feed-icon-container" style={{ marginTop: '2px', background: 'var(--bg-glass)', padding: '6px', borderRadius: '8px', border: '1px solid var(--border-glass)' }}>
+              {getEventIcon(event.type)}
+            </div>
+            <div className="feed-content" style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1 }}>
+              <span className="activity-text" style={{ fontSize: '13px', lineHeight: '1.4', color: 'var(--text-primary)' }}>{event.text}</span>
+              <span className="activity-time" style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{event.time}</span>
+            </div>
+          </motion.div>
+        ))}
+      </AnimatePresence>
+    </div>
+  );
+};
 
 export default function Dashboard() {
   const { state, actions } = useApp();
@@ -48,6 +148,11 @@ export default function Dashboard() {
     if (!activeCampaign || !unassignedLeadIds.length) return;
     actions.assignToCampaign(unassignedLeadIds, activeCampaign.id);
   };
+
+  const leadsCount = useCountUp(state.analytics.totalLeads);
+  const campaignsCount = useCountUp(state.campaigns.length);
+  const sentCount = useCountUp(state.analytics.emailsSent);
+  const repliesCount = useCountUp(state.analytics.replies);
 
   return (
     <MotionPage>
@@ -102,28 +207,28 @@ export default function Dashboard() {
         <MotionStatCard className="metric-card">
           <div className="metric-icon blue"><Users size={22} /></div>
           <div className="metric-content">
-            <div className="metric-value">{state.analytics.totalLeads}</div>
+            <div className="metric-value">{leadsCount}</div>
             <div className="metric-label">Prospects Sourced</div>
           </div>
         </MotionStatCard>
         <MotionStatCard className="metric-card">
           <div className="metric-icon cyan"><Activity size={22} /></div>
           <div className="metric-content">
-            <div className="metric-value">{state.campaigns.length}</div>
+            <div className="metric-value">{campaignsCount}</div>
             <div className="metric-label">Active Sequences</div>
           </div>
         </MotionStatCard>
         <MotionStatCard className="metric-card">
           <div className="metric-icon emerald"><Mail size={22} /></div>
           <div className="metric-content">
-            <div className="metric-value">{state.analytics.emailsSent}</div>
+            <div className="metric-value">{sentCount}</div>
             <div className="metric-label">Messages Delivered</div>
           </div>
         </MotionStatCard>
         <MotionStatCard className="metric-card">
           <div className="metric-icon purple"><MessageSquare size={22} /></div>
           <div className="metric-content">
-            <div className="metric-value">{state.analytics.replies}</div>
+            <div className="metric-value">{repliesCount}</div>
             <div className="metric-label">Conversations Started</div>
           </div>
         </MotionStatCard>
@@ -168,7 +273,7 @@ export default function Dashboard() {
         </div>
       </MotionCard>
 
-      {/* ── MID TIER: Orchestration + Latest Prospects ── */}
+      {/* ── MID TIER: Orchestration + AI Action Feed ── */}
       <div className="grid-2 mt-6" style={{ alignItems: 'start' }}>
         <MotionCard className="card" delay={0.35}>
           <div className="card-header">
@@ -194,7 +299,10 @@ export default function Dashboard() {
           </div>
 
           <div style={{ display: 'grid', gap: 'var(--space-3)' }}>
-            <div className="badge badge-blue">Status: {state.system.status}</div>
+            <div className="badge badge-blue">
+              <span className="live-dot" style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', backgroundColor: 'var(--cyan-400)', marginRight: 6, boxShadow: '0 0 8px var(--cyan-400)', animation: 'pulse 2s infinite' }}></span>
+              Status: {state.system.status}
+            </div>
             <div className="badge badge-neutral">
               Active Sequence: {activeCampaign ? activeCampaign.name : 'None selected'}
             </div>
@@ -204,39 +312,16 @@ export default function Dashboard() {
           </div>
         </MotionCard>
 
-        <MotionCard className="card" delay={0.4}>
-          <div className="card-header">
+        <MotionCard className="card" delay={0.4} style={{ display: 'flex', flexDirection: 'column', height: '100%', minHeight: 400 }}>
+          <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
-              <div className="card-title">Latest Prospects</div>
-              <div className="card-subtitle">Latest prospect movement across the pipeline.</div>
+              <div className="card-title">AI Activity</div>
+              <div className="card-subtitle">Real-time system workflow execution.</div>
             </div>
+            <span className="badge badge-blue"><span className="live-dot" style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', backgroundColor: 'var(--cyan-400)', marginRight: 6, boxShadow: '0 0 8px var(--cyan-400)', animation: 'pulse 2s infinite' }}></span> Live</span>
           </div>
-          <div className="activity-list">
-            {state.leads.slice(0, 10).map((lead, i) => (
-              <motion.div
-                key={lead.id}
-                className="activity-item"
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, delay: 0.45 + i * 0.04 }}
-              >
-                <span className={`activity-dot ${lead.status === 'Replied' ? 'replied' : lead.status === 'Opened' ? 'opened' : lead.status === 'Failed' || lead.status === 'No Email' ? 'bounced' : 'sent'}`}></span>
-                <span className="activity-text">
-                  <strong>{lead.name}</strong> at <strong>{lead.company}</strong> — {lead.status}
-                </span>
-                <span className="activity-time">{lead.stage}</span>
-              </motion.div>
-            ))}
-            {state.leads.length === 0 && (
-              <div className="empty-state-block">
-                <Users size={32} className="empty-state-icon" />
-                <h3>No prospects in the pipeline</h3>
-                <p>Source your first batch to activate the system.</p>
-                <button className="btn btn-primary btn-sm" onClick={() => actions.generateLeads()} disabled={state.system.isGeneratingLeads}>
-                  Source Prospects →
-                </button>
-              </div>
-            )}
+          <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
+            <AIActivityFeed />
           </div>
         </MotionCard>
       </div>

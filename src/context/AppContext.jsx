@@ -2,7 +2,7 @@
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 
 const AppContext = createContext(null);
-const STORAGE_KEY = 'zoka-outbound-system-v2';
+const STORAGE_KEY = 'zoka-outbound-system-v3';
 const MAX_LOGS = 250;
 
 const FIRST_NAMES = ['Sarah', 'Marcus', 'Emma', 'James', 'Priya', 'Daniel', 'Olivia', 'Ethan', 'Aisha', 'Ryan', 'Hannah', 'Alex', 'Michael', 'Sophie', 'Noah', 'Chloe', 'Liam', 'Isabella', 'Benjamin', 'Mia'];
@@ -104,27 +104,182 @@ function computeAnalytics(nextState) {
   };
 }
 
+function buildDemoLeads() {
+  const demoProfiles = [
+    { name: 'Sarah Chen', company: 'CloudScale Inc', title: 'VP Sales', industry: 'B2B SaaS', status: 'Replied', stage: 'replied' },
+    { name: 'Marcus Reid', company: 'PipelineForge', title: 'CEO', industry: 'Agency', status: 'Replied', stage: 'replied' },
+    { name: 'Emma Patel', company: 'GrowthStack', title: 'Head of Growth', industry: 'Martech', status: 'Replied', stage: 'replied' },
+    { name: 'James Walker', company: 'RevenueHQ', title: 'Founder', industry: 'B2B SaaS', status: 'Replied', stage: 'replied' },
+    { name: 'Priya Sharma', company: 'DemandFlow', title: 'Growth Lead', industry: 'B2B SaaS', status: 'Replied', stage: 'replied' },
+    { name: 'Daniel Brooks', company: 'ScaleBridge', title: 'CEO', industry: 'Agency', status: 'Replied', stage: 'replied' },
+    { name: 'Olivia Nguyen', company: 'FunnelPilot', title: 'VP Sales', industry: 'Martech', status: 'Replied', stage: 'replied' },
+    { name: 'Ethan Miller', company: 'OutboundOps', title: 'RevOps Manager', industry: 'DevTools', status: 'Replied', stage: 'replied' },
+    { name: 'David Chen', company: 'FinixAnalytics', title: 'CTO', industry: 'Fintech', status: 'Opened', stage: 'opened' },
+    { name: 'Elena Rostova', company: 'LogisTech', title: 'VP Engineering', industry: 'B2B SaaS', status: 'Opened', stage: 'opened' },
+    { name: 'Ryan Torres', company: 'SignalEngine', title: 'Founder', industry: 'DevTools', status: 'Opened', stage: 'opened' },
+    { name: 'Hannah Lee', company: 'ProspectLabs', title: 'Head of Growth', industry: 'Martech', status: 'Opened', stage: 'opened' },
+    { name: 'Alex Dubois', company: 'CloseWorks', title: 'CEO', industry: 'Agency', status: 'Opened', stage: 'opened' },
+    { name: 'Michael Grant', company: 'LeadCloud', title: 'Growth Lead', industry: 'B2B SaaS', status: 'Opened', stage: 'opened' },
+    { name: 'Sophie Williams', company: 'ClientForge', title: 'VP Sales', industry: 'Fintech', status: 'Opened', stage: 'opened' },
+    { name: 'Noah Anderson', company: 'ScaleOps', title: 'Founder', industry: 'DevTools', status: 'Opened', stage: 'opened' },
+    { name: 'Chloe Martin', company: 'GrowthLoop', title: 'Head of Growth', industry: 'Martech', status: 'Opened', stage: 'opened' },
+    { name: 'Liam Clark', company: 'RevenuePilot', title: 'CEO', industry: 'B2B SaaS', status: 'Opened', stage: 'opened' },
+    { name: 'Isabella Rossi', company: 'DemandBridge', title: 'VP Sales', industry: 'Agency', status: 'Opened', stage: 'opened' },
+    { name: 'Benjamin Khan', company: 'FunnelStack', title: 'Founder', industry: 'Fintech', status: 'Opened', stage: 'opened' },
+    { name: 'Mia Thompson', company: 'OutboundLabs', title: 'Growth Lead', industry: 'B2B SaaS', status: 'Opened', stage: 'opened' },
+    { name: 'Aisha Brooks', company: 'PipelineOps', title: 'RevOps Manager', industry: 'DevTools', status: 'Opened', stage: 'opened' },
+  ];
+
+  const sentProfiles = [
+    { name: 'Jason Park', company: 'ScaleForge', title: 'CEO', industry: 'B2B SaaS', status: 'Sent', stage: 'day-1-sent' },
+    { name: 'Rachel Kim', company: 'GrowthEngine', title: 'VP Sales', industry: 'Agency', status: 'Sent', stage: 'day-1-sent' },
+    { name: 'Thomas Rivera', company: 'LeadBridge', title: 'Founder', industry: 'Martech', status: 'Sent', stage: 'day-1-sent' },
+    { name: 'Natalie Webb', company: 'ClientStack', title: 'Head of Growth', industry: 'B2B SaaS', status: 'Sent', stage: 'day-1-sent' },
+    { name: 'Chris Davis', company: 'FunnelForge', title: 'CEO', industry: 'Fintech', status: 'Sent', stage: 'day-1-sent' },
+    { name: 'Jessica Liu', company: 'RevenueFlow', title: 'Growth Lead', industry: 'DevTools', status: 'Sent', stage: 'day-3-sent' },
+    { name: 'Andrew Scott', company: 'DemandHQ', title: 'VP Sales', industry: 'B2B SaaS', status: 'Sent', stage: 'day-3-sent' },
+    { name: 'Lauren Chang', company: 'ProspectOps', title: 'Founder', industry: 'Agency', status: 'Sent', stage: 'day-1-sent' },
+    { name: 'Kevin Patel', company: 'ScalePilot', title: 'RevOps Manager', industry: 'Martech', status: 'Sent', stage: 'day-1-sent' },
+    { name: 'Amy Foster', company: 'OutboundHQ', title: 'CEO', industry: 'B2B SaaS', status: 'Sent', stage: 'day-1-sent' },
+    { name: 'Matt Collins', company: 'SignalFlow', title: 'Head of Growth', industry: 'DevTools', status: 'Sent', stage: 'day-1-sent' },
+    { name: 'Sarah Jensen', company: 'CloseCloud', title: 'VP Sales', industry: 'Fintech', status: 'Sent', stage: 'day-1-sent' },
+    { name: 'Brandon Lee', company: 'LeadStack', title: 'Founder', industry: 'B2B SaaS', status: 'Sent', stage: 'day-1-sent' },
+    { name: 'Michelle Tran', company: 'ClientOps', title: 'Growth Lead', industry: 'Agency', status: 'Sent', stage: 'day-1-sent' },
+    { name: 'Derek Hoffman', company: 'GrowthPilot', title: 'CEO', industry: 'Martech', status: 'Sent', stage: 'day-1-sent' },
+    { name: 'Nicole Adams', company: 'PipelineWorks', title: 'VP Sales', industry: 'B2B SaaS', status: 'Sent', stage: 'day-1-sent' },
+  ];
+
+  const newProfiles = [
+    { name: 'Victor Hayes', company: 'FunnelOps', title: 'Founder', industry: 'DevTools', status: 'Assigned', stage: 'assigned' },
+    { name: 'Diana Cruz', company: 'ScaleEngine', title: 'Head of Growth', industry: 'B2B SaaS', status: 'Assigned', stage: 'assigned' },
+    { name: 'Robert Yang', company: 'DemandForge', title: 'CEO', industry: 'Fintech', status: 'Assigned', stage: 'assigned' },
+    { name: 'Samantha Reeves', company: 'RevenueStack', title: 'VP Sales', industry: 'Agency', status: 'New', stage: 'generated' },
+    { name: 'Tyler Nash', company: 'ProspectFlow', title: 'Growth Lead', industry: 'B2B SaaS', status: 'New', stage: 'generated' },
+    { name: 'Kayla Bennett', company: 'OutboundForge', title: 'RevOps Manager', industry: 'Martech', status: 'New', stage: 'generated' },
+    { name: 'Owen Murphy', company: 'SignalWorks', title: 'Founder', industry: 'DevTools', status: 'New', stage: 'generated' },
+    { name: 'Zoe Carter', company: 'LeadForge', title: 'CEO', industry: 'B2B SaaS', status: 'New', stage: 'generated' },
+    { name: 'Justin Brooks', company: 'ClientBridge', title: 'VP Sales', industry: 'Agency', status: 'New', stage: 'generated' },
+  ];
+
+  const allProfiles = [...demoProfiles, ...sentProfiles, ...newProfiles];
+  const createdAt = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString();
+
+  return allProfiles.map((profile, i) => {
+    const domain = profile.company.toLowerCase().replace(/\s+/g, '');
+    const firstName = profile.name.split(' ')[0].toLowerCase();
+    const lastName = profile.name.split(' ')[1].toLowerCase();
+    return {
+      id: i + 1,
+      name: profile.name,
+      company: profile.company,
+      email: `${firstName}.${lastName}@${domain}.io`,
+      title: profile.title,
+      industry: profile.industry,
+      status: profile.status,
+      stage: profile.stage,
+      score: randomInt(68, 97),
+      campaignId: profile.stage === 'generated' ? null : (i < 30 ? 1 : 2),
+      createdAt,
+    };
+  });
+}
+
+function buildDemoEmails(leads) {
+  const emails = [];
+  let emailId = 1;
+  const baseTime = Date.now() - 90 * 60 * 1000;
+
+  leads.forEach((lead) => {
+    if (lead.stage === 'generated' || lead.stage === 'assigned') return;
+
+    const status =
+      lead.stage === 'replied' ? 'replied' :
+      lead.stage === 'opened' ? 'opened' : 'sent';
+
+    emails.push({
+      id: emailId++,
+      leadId: lead.id,
+      campaignId: lead.campaignId || 1,
+      stepDay: 1,
+      sequenceLabel: 'Day 1 Intro',
+      status,
+      deliveryStatus: status === 'replied' ? 'Replied' : status === 'opened' ? 'Opened' : 'Sent',
+      openedAt: status !== 'sent' ? new Date(baseTime + emailId * 60000).toISOString() : null,
+      replied: status === 'replied',
+      attempts: 1,
+      updatedAt: new Date(baseTime + emailId * 60000).toISOString(),
+    });
+  });
+
+  return emails;
+}
+
 function defaultState() {
+  const leads = buildDemoLeads();
+  const emails = buildDemoEmails(leads);
+
+  const assignedLeadIds1 = leads.filter((l) => l.campaignId === 1).map((l) => l.id);
+  const assignedLeadIds2 = leads.filter((l) => l.campaignId === 2).map((l) => l.id);
+
+  const sent1 = emails.filter((e) => e.campaignId === 1 && (e.status === 'sent' || e.status === 'opened' || e.status === 'replied')).length;
+  const opened1 = emails.filter((e) => e.campaignId === 1 && (e.status === 'opened' || e.status === 'replied')).length;
+  const replied1 = emails.filter((e) => e.campaignId === 1 && e.status === 'replied').length;
+
+  const sent2 = emails.filter((e) => e.campaignId === 2 && (e.status === 'sent' || e.status === 'opened' || e.status === 'replied')).length;
+  const opened2 = emails.filter((e) => e.campaignId === 2 && (e.status === 'opened' || e.status === 'replied')).length;
+  const replied2 = emails.filter((e) => e.campaignId === 2 && e.status === 'replied').length;
+
+  const now = new Date();
+  const logTime = (minsAgo) => {
+    const d = new Date(now.getTime() - minsAgo * 60000);
+    return `[${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}]`;
+  };
+
   const state = {
     isDemoMode: true,
-    leads: [],
+    leads,
     campaigns: [
       {
         id: 1,
-        name: 'Founders Outbound Sprint',
-        status: 'draft',
-        leadIds: [],
-        sentCount: 0,
-        openCount: 0,
-        replyCount: 0,
+        name: 'SaaS Founders Sprint',
+        status: 'active',
+        leadIds: assignedLeadIds1,
+        sentCount: sent1,
+        openCount: opened1,
+        replyCount: replied1,
         failedCount: 0,
         sequence: DEFAULT_SEQUENCE,
-        createdAt: nowIso(),
+        createdAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
+      },
+      {
+        id: 2,
+        name: 'Agency Growth Outreach',
+        status: 'active',
+        leadIds: assignedLeadIds2,
+        sentCount: sent2,
+        openCount: opened2,
+        replyCount: replied2,
+        failedCount: 0,
+        sequence: DEFAULT_SEQUENCE,
+        createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
       },
     ],
-    messages: [],
-    emails: [],
-    logs: pushLog([], 'System ready in demo mode'),
+    messages: leads.filter((l) => l.stage !== 'generated').map((l) => buildMessageRecord(l)),
+    emails,
+    logs: [
+      `${logTime(1)} Reply received from Olivia Nguyen`,
+      `${logTime(2)} Open detected from Isabella Rossi`,
+      `${logTime(3)} Email sent to Derek Hoffman (Day 1 Intro)`,
+      `${logTime(4)} AI messages generated for SaaS Founders Sprint`,
+      `${logTime(6)} Batch 3/3 delivered — 16 messages sent`,
+      `${logTime(8)} Open detected from Hannah Lee`,
+      `${logTime(10)} Reply received from Emma Patel — positive intent`,
+      `${logTime(12)} Batch 2/3 delivered — 14 messages sent`,
+      `${logTime(15)} AI Signal: Open rate 58% — above baseline`,
+      `${logTime(18)} Enriched 43 contacts — 91% email match rate`,
+      `${logTime(22)} Sourced 47 prospects from LinkedIn SaaS Founders`,
+      `${logTime(25)} System ready — demo environment loaded`,
+    ],
     analytics: {
       totalLeads: 0,
       emailsSent: 0,
@@ -134,9 +289,9 @@ function defaultState() {
       funnel: { leads: 0, sent: 0, opened: 0, replied: 0 },
     },
     system: {
-      status: 'idle',
-      lastRun: null,
-      currentCampaign: null,
+      status: 'active',
+      lastRun: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
+      currentCampaign: 1,
       isPaused: false,
       isGeneratingLeads: false,
       isGeneratingMessages: false,

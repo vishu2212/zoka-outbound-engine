@@ -66,8 +66,8 @@ export default function Layout() {
       </div>
       <main className="main-content">
         {state.isDemoMode && (
-          <div style={{ marginBottom: 'var(--space-4)' }} className="badge badge-amber">
-            Simulated system — demo purposes only
+          <div style={{ marginBottom: 'var(--space-4)' }} className="badge badge-blue">
+            <span style={{ marginRight: 6 }}>⚡</span> Demo Environment — Loaded with sample data to showcase system capabilities
           </div>
         )}
         <AnimatePresence mode="wait">
